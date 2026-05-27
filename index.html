@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking 2.0 — Pods Comerciales · Valiu</title>
+<style>
+:root {
+  color-scheme: light;
+  --pod-a:       #3B82F6;
+  --pod-a-light: #EFF6FF;
+  --pod-a-mid:   #BFDBFE;
+  --pod-b:       #8B5CF6;
+  --pod-b-light: #F5F3FF;
+  --pod-b-mid:   #DDD6FE;
+  --success:     #10B981;
+  --warning:     #F59E0B;
+  --danger:      #EF4444;
+  --text:        #111827;
+  --text-muted:  #6B7280;
+  --bg:          #F1F5F9;
+  --card:        #FFFFFF;
+  --border:      #E5E7EB;
+  --radius:      12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+/* ── Header ── */
+.header { background: #0F172A; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 10; }
+.header-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
+.header-sub { font-size: 11px; color: #94A3B8; margin-top: 2px; }
+.header-controls { display: flex; align-items: center; gap: 10px; }
+input[type="month"] { border: 1px solid #475569; background: #1E293B; color: white; padding: 6px 10px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.btn { border: none; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+.btn:hover { opacity: .82; }
+.btn-primary { background: #3B82F6; color: white; }
+
+/* ── Tabs ── */
+.tabs { background: #1E293B; padding: 0 24px; display: flex; gap: 4px; }
+.tab-btn { background: none; border: none; color: #94A3B8; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; }
+.tab-btn:hover { color: white; }
+.tab-btn.active { color: white; border-bottom-color: #3B82F6; }
+
+/* ── Loading ── */
+.loading-overlay { position: fixed; inset: 0; background: rgba(248,250,252,.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
+.spinner { width: 36px; height: 36px; border: 3px solid #E2E8F0; border-top-color: #3B82F6; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-overlay.hidden { display: none; }
+.loading-text { color: #475569; font-size: 13px; }
+
+/* ── Layout ── */
+.main { padding: 20px 24px; max-width: 1380px; margin: 0 auto; }
+.section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 20px 0 10px; }
+.section-title:first-child { margin-top: 0; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ── Error ── */
+.error-banner { background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: var(--radius); margin-bottom: 14px; display: none; font-size: 13px; }
+.error-banner.show { display: block; }
+
+/* ── Alert banner ── */
+.alert-banner { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 14px; font-size: 12px; display: none; }
+.alert-banner.show { display: block; }
+
+/* ── Bono cards ── */
+.bono-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.bono-card { border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: flex-start; gap: 14px; border: 1px solid; }
+.bono-card.bono-pending  { background: #FFFBEB; border-color: #FDE68A; }
+.bono-card.bono-active   { background: #ECFDF5; border-color: #6EE7B7; }
+.bono-card.bono-inactive { background: #FEF2F2; border-color: #FCA5A5; }
+.bono-icon { font-size: 26px; margin-top: 2px; }
+.bono-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.bono-val { font-size: 16px; font-weight: 800; margin: 3px 0; }
+.bono-card.bono-active   .bono-val { color: #065F46; }
+.bono-card.bono-inactive .bono-val { color: #991B1B; }
+.bono-card.bono-pending  .bono-val { color: #92400E; }
+.bono-det { font-size: 12px; color: var(--text-muted); }
+
+/* ── Pod sections ── */
+.pod-section { border-radius: var(--radius); border: 2px solid; overflow: hidden; }
+.pod-section.pod-a { border-color: var(--pod-a-mid); }
+.pod-section.pod-b { border-color: var(--pod-b-mid); }
+.pod-header { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 15px; }
+.pod-section.pod-a .pod-header { background: var(--pod-a); color: white; }
+.pod-section.pod-b .pod-header { background: var(--pod-b); color: white; }
+.pod-sub { font-size: 12px; font-weight: 400; opacity: .85; }
+.pod-body { background: white; display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 12px; }
+
+/* ── Person card ── */
+.person-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.person-name { font-weight: 700; font-size: 14px; }
+.person-role { font-size: 11px; color: var(--text-muted); margin: 2px 0 10px; }
+.kpi-lbl { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.kpi-lbl strong { color: var(--text); }
+.kpi-track { height: 7px; background: #E2E8F0; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+.kpi-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.n-row { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 6px; }
+.n-pill { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #F3F4F6; color: #6B7280; }
+.n-pill.hit { background: #DBEAFE; color: #1D4ED8; }
+.sep { border-top: 1px solid var(--border); margin: 8px 0; }
+.manual-input { border: 1px dashed #D1D5DB; background: #FEFCE8; padding: 3px 7px; border-radius: 6px; width: 60px; font-size: 13px; text-align: center; }
+.manual-input:focus { outline: none; border-color: #F59E0B; background: #FFFBEB; }
+
+/* ── Badge ── */
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-green  { background: #D1FAE5; color: #065F46; }
+.badge-amber  { background: #FEF3C7; color: #92400E; }
+.badge-red    { background: #FEE2E2; color: #991B1B; }
+.badge-blue   { background: #DBEAFE; color: #1E40AF; }
+.badge-gray   { background: #F3F4F6; color: #6B7280; }
+
+/* ── Pod compare ── */
+.compare-grid { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
+.compare-grid:last-child { border-bottom: none; }
+.compare-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.compare-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.compare-track { flex: 1; height: 10px; background: #E2E8F0; border-radius: 5px; overflow: hidden; }
+.compare-fill  { height: 100%; border-radius: 5px; }
+.compare-num { width: 30px; font-size: 13px; font-weight: 800; text-align: right; }
+.compare-head { font-size: 12px; font-weight: 700; text-align: center; padding: 6px 0; }
+
+/* ── Variable table ── */
+.var-table { width: 100%; border-collapse: collapse; }
+.var-table th { background: #F8FAFC; padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
+.var-table td { padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-size: 13px; vertical-align: middle; }
+.var-table tr:last-child td { border-bottom: none; }
+.var-table tr:hover td { background: #FAFAFA; }
+.pct-big { font-size: 15px; font-weight: 800; }
+
+/* ── Sábana ── */
+.sabana-section { margin-bottom: 28px; }
+.sabana-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sabana-count { font-size: 11px; font-weight: 600; background: #E0F2FE; color: #0369A1; padding: 2px 8px; border-radius: 20px; }
+.sabana-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sabana-table th { background: #F8FAFC; padding: 7px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
+.sabana-table td { padding: 8px 10px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+.sabana-table tr:last-child td { border-bottom: none; }
+.sabana-table tr:hover td { background: #FAFAFA; }
+.no-sdr { font-size: 10px; font-weight: 600; background: #FEF3C7; color: #92400E; padding: 1px 6px; border-radius: 4px; }
+.alert-flag { font-size: 11px; }
+
+/* ── Footer ── */
+.footer { font-size: 11px; color: #94A3B8; text-align: center; padding: 16px; }
+
+@media (max-width: 900px) {
+  .grid-2, .bono-wrap { grid-template-columns: 1fr; }
+  .pod-body { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 70px 1fr 1fr; }
+  .sabana-table { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Cargando datos de HubSpot…</div>
+</div>
+
+<div class="header">
+  <div>
+    <div class="header-title">🏆 Tracking 2.0 — Pods Comerciales</div>
+    <div class="header-sub" id="headerSub">Valiu · cargando…</div>
+  </div>
+  <div class="header-controls">
+    <input type="month" id="monthPicker">
+    <button class="btn btn-primary" onclick="loadData()">↺ Actualizar</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" id="tab-dashboard" onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn" id="tab-sabana" onclick="switchTab('sabana')">📋 Sábana</button>
+</div>
+
+<div class="main" id="mainContent" style="display:none;">
+
+  <div class="error-banner" id="errorBanner"></div>
+  <div class="alert-banner" id="alertBanner"></div>
+
+  <!-- ── DASHBOARD TAB ── -->
+  <div id="tabDashboard">
+
+    <div class="section-title">⭐ Bonos del mes</div>
+    <div class="bono-wrap">
+      <div class="bono-card bono-pending" id="bonoEqCard">
+        <div class="bono-icon">🤝</div>
+        <div>
+          <div class="bono-label">Bono Equipo · +10pp</div>
+          <div class="bono-val" id="bonoEqVal">—</div>
+          <div class="bono-det" id="bonoEqDet">Valiu activa ≥10 clientes/mes (todos los canales)</div>
+        </div>
+      </div>
+      <div class="bono-card bono-pending" id="bonoCompCard">
+        <div class="bono-icon">🏆</div>
+        <div>
+          <div class="bono-label">Bono Competencia · +10pp</div>
+          <div class="bono-val" id="bonoCompVal">—</div>
+          <div class="bono-det" id="bonoCompDet">Más outbound + mín. 4 demos y 3 clientes por pod</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">👤 Performance individual</div>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="pod-section pod-a">
+        <div class="pod-header">
+          <span>Pod A</span>
+          <span class="pod-sub" id="podASubtitle"></span>
+        </div>
+        <div class="pod-body">
+          <div class="person-card" id="card-maria"></div>
+          <div class="person-card" id="card-andrea"></div>
+          <div class="person-card" id="card-rocio"></div>
+        </div>
+      </div>
+      <div class="pod-section pod-b">
+        <div class="pod-header">
+          <span>Pod B</span>
+          <span class="pod-sub" id="podBSubtitle"></span>
+        </div>
+        <div class="pod-body">
+          <div class="person-card" id="card-carlos"></div>
+          <div class="person-card" id="card-yamila"></div>
+          <div class="person-card" id="card-agustin"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">🤝 Clientes outbound activados — componente pod (meta: 6/mes)</div>
+    <div class="card" style="margin-bottom:18px;" id="podCompareCard"></div>
+
+    <div class="section-title">💰 Variable final</div>
+    <div class="card" style="margin-bottom:18px; overflow-x:auto;">
+      <table class="var-table">
+        <thead>
+          <tr>
+            <th>Persona</th><th>Rol</th><th>Pod</th>
+            <th>% Indiv.</th><th>% Pod</th>
+            <th>Bono Eq.</th><th>Bono Comp.</th>
+            <th>% Final</th><th>Piso</th>
+          </tr>
+        </thead>
+        <tbody id="varBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer" id="footer"></div>
+  </div>
+
+  <!-- ── SÁBANA TAB ── -->
+  <div id="tabSabana" style="display:none;">
+
+    <div class="sabana-section">
+      <div class="sabana-title">
+        🎯 Leads calificadas
+        <span class="sabana-count" id="leadsCount">0</span>
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Salida de Demo Agendada → pipeline Ventas / Apertura / CS</span>
+      </div>
+      <div class="card" style="overflow-x:auto;">
+        <table class="sabana-table">
+          <thead>
+            <tr>
+              <th>Deal</th><th>SDR</th><th>Pipeline</th><th>Fecha demo calificada</th><th>Volumen</th><th>Pts</th>
+            </tr>
+          </thead>
+          <tbody id="sabanaLeadsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sabana-section">
+      <div class="sabana-title">
+        ✅ Nuevos clientes activados
+        <span class="sabana-count" id="activationsCount">0</span>
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Por fecha de activación</span>
+      </div>
+      <div class="card" style="overflow-x:auto;">
+        <table class="sabana-table">
+          <thead>
+            <tr>
+              <th>Deal</th><th>KAM</th><th>SDR</th><th>Fuente</th><th>Fecha activación</th><th>Volumen</th><th>Pts</th><th>Control</th>
+            </tr>
+          </thead>
+          <tbody id="sabanaActBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sabana-section" id="alertSection" style="display:none;">
+      <div class="sabana-title">
+        ⚠️ A resolver — salieron de "Cuenta sin activación" pero sin fecha de activación
+        <span class="sabana-count" id="alertsCount" style="background:#FEF3C7;color:#92400E;">0</span>
+      </div>
+      <div class="card" style="overflow-x:auto;">
+        <table class="sabana-table">
+          <thead>
+            <tr>
+              <th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="sabanaAlertBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer" id="footer2"></div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════
+const OID = {
+  MARIA:   '729221560',
+  ANDREA:  '91653845',
+  CARLOS:  '90253953',
+  YAMILA:  '77904392',
+  ROCIO:   '2104711324',
+  AGUSTIN: '209899615',
+};
+const OWNER_NAME = {
+  '729221560':  'María',
+  '91653845':   'Andrea',
+  '90253953':   'Carlos',
+  '77904392':   'Yamila',
+  '2104711324': 'Rocío',
+  '209899615':  'Agustín',
+};
+
+const POD_A_SDRS = [OID.MARIA, OID.ANDREA];
+const POD_B_SDRS = [OID.CARLOS, OID.YAMILA];
+
+const N_MAP = {
+  'Menor a $20,000 USD':          0.25,
+  'Menor a $25,000 USD':          0.25,
+  'Entre $25,000 y $50,000 USD':  0.5,
+  'Entre $50,000 y $100,000 USD': 1,
+  'Entre $100,001 y $200,000 USD':1.5,
+  'Entre $200,001 y $500,000 USD':2,
+};
+const N_LABEL = {
+  'Menor a $20,000 USD':          'N1',
+  'Menor a $25,000 USD':          'N1',
+  'Entre $25,000 y $50,000 USD':  'N2',
+  'Entre $50,000 y $100,000 USD': 'N3',
+  'Entre $100,001 y $200,000 USD':'N4',
+  'Entre $200,001 y $500,000 USD':'N5',
+};
+const PIPELINE_NAMES = {
+  'default':   'Ventas',
+  '53531296':  'Apertura de Cuentas',
+  '10153632':  'Customer Success',
+  '656358057': 'Prospección',
+};
+
+const NON_OUTBOUND  = ['Referidos por clientes', 'Friends & Families'];
+
+const SDR_TARGET     = 7;
+const KAM_NC_TARGET  = 8;
+const KAM_CA_TARGET  = 80;
+const POD_TARGET     = 6;
+const BONO_EQ_MIN    = 10;
+const COMP_MIN_DEMOS = 4;
+const COMP_MIN_CLI   = 3;
+const FLOOR          = 0.30;
+
+// ════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════
+const S = {
+  activated: [],   // fecha_activacion in month
+  leads: [],       // exited Demo Agendada + in Ventas/Apertura/CS
+  kamExit: [],     // exited "Cuenta sin activacion" in month (double control)
+  caRocio:   localStorage.getItem('ca_rocio')   || '',
+  caAgustin: localStorage.getItem('ca_agustin') || '',
+};
+
+// ════════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════════
+let activeTab = 'dashboard';
+function switchTab(t) {
+  activeTab = t;
+  document.getElementById('tabDashboard').style.display = t === 'dashboard' ? '' : 'none';
+  document.getElementById('tabSabana').style.display    = t === 'sabana'    ? '' : 'none';
+  document.getElementById('tab-dashboard').className = 'tab-btn' + (t === 'dashboard' ? ' active' : '');
+  document.getElementById('tab-sabana').className    = 'tab-btn' + (t === 'sabana'    ? ' active' : '');
+}
+
+// ════════════════════════════════════════════════════
+// API
+// ════════════════════════════════════════════════════
+async function callHS(body) {
+  const res = await fetch('/api/hubspot', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+// ════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('monthPicker').value =
+    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  loadData();
+});
+
+// ════════════════════════════════════════════════════
+// LOAD DATA
+// ════════════════════════════════════════════════════
+async function loadData() {
+  setLoading(true, 'Cargando datos de HubSpot…');
+  setError(null);
+  document.getElementById('mainContent').style.display = 'none';
+
+  const mv = document.getElementById('monthPicker').value;
+  if (!mv) { setError('Seleccioná un mes.'); setLoading(false); return; }
+
+  const [y, m] = mv.split('-').map(Number);
+  const d1  = `${y}-${String(m).padStart(2,'0')}-01`;
+  const nm  = m === 12 ? 1 : m + 1;
+  const ny  = m === 12 ? y + 1 : y;
+  const d2  = `${ny}-${String(nm).padStart(2,'0')}-01`;
+  const d1ms = String(new Date(d1 + 'T00:00:00.000Z').getTime());
+  const d2ms = String(new Date(d2 + 'T00:00:00.000Z').getTime());
+
+  try {
+    const [actRes, leadRes, exitRes] = await Promise.all([
+
+      // Q1 — Nuevos clientes (fecha_activacion)
+      callHS({
+        properties: ['dealname','hubspot_owner_id','sdr__que_agendo_',
+                     'fecha_activacion','fuente_principal_de_lead',
+                     'promedio___volumen_operado_al_mes__detallado_','pipeline'],
+        filterGroups: [{ filters: [
+          { propertyName:'fecha_activacion', operator:'GTE', value:d1 },
+          { propertyName:'fecha_activacion', operator:'LT',  value:d2 },
+        ]}],
+        limit: 200,
+      }),
+
+      // Q2 — Leads calificadas (salida Demo Agendada + pipeline ≠ Prospección)
+      callHS({
+        properties: ['dealname','sdr__que_agendo_',
+                     'hs_v2_date_exited_965485717',
+                     'promedio___volumen_operado_al_mes__detallado_','pipeline'],
+        filterGroups: [{ filters: [
+          { propertyName:'hs_v2_date_exited_965485717', operator:'GTE', value:d1ms },
+          { propertyName:'hs_v2_date_exited_965485717', operator:'LT',  value:d2ms },
+          { propertyName:'pipeline', operator:'IN',
+            values:['default','53531296','10153632'] },
+        ]}],
+        limit: 200,
+      }),
+
+      // Q3 — Double control KAM: salió de "Cuenta abierta / Sin activación"
+      callHS({
+        properties: ['dealname','hubspot_owner_id','fecha_activacion',
+                     'hs_v2_date_exited_29556535',
+                     'fuente_principal_de_lead','promedio___volumen_operado_al_mes__detallado_'],
+        filterGroups: [{ filters: [
+          { propertyName:'hs_v2_date_exited_29556535', operator:'GTE', value:d1ms },
+          { propertyName:'hs_v2_date_exited_29556535', operator:'LT',  value:d2ms },
+        ]}],
+        limit: 200,
+      }),
+    ]);
+
+    S.activated = actRes.results  || [];
+    S.leads     = leadRes.results || [];
+    S.kamExit   = exitRes.results || [];
+
+    render();
+    renderSabana();
+
+  } catch(e) {
+    setError('Error cargando HubSpot: ' + e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ════════════════════════════════════════════════════
+// COMPUTE
+// ════════════════════════════════════════════════════
+function compute() {
+  // SDR points from leads
+  const sdr = {};
+  for (const id of Object.values(OID)) sdr[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+
+  for (const d of S.leads) {
+    const id  = d.properties.sdr__que_agendo_;
+    if (!id) continue;
+    if (!sdr[id]) sdr[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+    const vol = d.properties.promedio___volumen_operado_al_mes__detallado_;
+    const w = N_MAP[vol];
+    const n = N_LABEL[vol];
+    if (w && n) { sdr[id][n.toLowerCase()]++; sdr[id].pts += w; }
+    sdr[id].count++;
+  }
+
+  // KAM new clients from activations
+  const kam = {};
+  for (const id of [OID.ROCIO, OID.AGUSTIN]) kam[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+
+  for (const d of S.activated) {
+    const id  = d.properties.hubspot_owner_id;
+    if (!kam[id]) continue;
+    const vol = d.properties.promedio___volumen_operado_al_mes__detallado_;
+    const w = N_MAP[vol];
+    const n = N_LABEL[vol];
+    if (w && n) { kam[id][n.toLowerCase()]++; kam[id].pts += w; }
+    kam[id].count++;
+  }
+
+  // Pod outbound + demos
+  let podAOut=0, podBOut=0, podADem=0, podBDem=0;
+  for (const d of S.activated) {
+    const sid = d.properties.sdr__que_agendo_;
+    const src = d.properties.fuente_principal_de_lead || '';
+    if (!sid || NON_OUTBOUND.includes(src)) continue;
+    if (POD_A_SDRS.includes(sid))      podAOut++;
+    else if (POD_B_SDRS.includes(sid)) podBOut++;
+  }
+  for (const d of S.leads) {
+    const sid = d.properties.sdr__que_agendo_;
+    if (POD_A_SDRS.includes(sid))      podADem++;
+    else if (POD_B_SDRS.includes(sid)) podBDem++;
+  }
+
+  // Bonos
+  const totalAct = S.activated.length;
+  const bonoEq   = totalAct >= BONO_EQ_MIN;
+  const aQual    = podAOut >= COMP_MIN_CLI && podADem >= COMP_MIN_DEMOS;
+  const bQual    = podBOut >= COMP_MIN_CLI && podBDem >= COMP_MIN_DEMOS;
+  let winner = null;
+  if (aQual && podAOut > podBOut)      winner = 'A';
+  else if (bQual && podBOut > podAOut) winner = 'B';
+
+  // Double control alerts: in kamExit but not in activated (or fecha_activacion empty/wrong month)
+  const actIds = new Set(S.activated.map(d => String(d.id)));
+  const alerts = S.kamExit.filter(d => {
+    if (!actIds.has(String(d.id))) return true;
+    const fa = d.properties.fecha_activacion;
+    if (!fa) return true;
+    // Check if fecha_activacion matches the selected month
+    const mv = document.getElementById('monthPicker').value;
+    return !fa.startsWith(mv);
+  });
+
+  return { sdr, kam, podAOut, podBOut, podADem, podBDem, totalAct, bonoEq, winner, alerts };
+}
+
+// ════════════════════════════════════════════════════
+// RENDER — DASHBOARD
+// ════════════════════════════════════════════════════
+function render() {
+  const C = compute();
+
+  // Alert banner
+  if (C.alerts.length > 0) {
+    const el = document.getElementById('alertBanner');
+    el.innerHTML = `⚠️ <strong>${C.alerts.length} deal${C.alerts.length>1?'s':''} a resolver</strong>: salieron de "Cuenta sin activación" pero no tienen fecha de activación correcta. Ver pestaña <strong>Sábana</strong>.`;
+    el.className = 'alert-banner show';
+  } else {
+    document.getElementById('alertBanner').className = 'alert-banner';
+  }
+
+  renderBonos(C);
+  renderPodCards(C);
+  renderPodCompare(C);
+  renderVarFinal(C);
+
+  const mv = document.getElementById('monthPicker').value;
+  const [y, m2] = mv.split('-').map(Number);
+  const label = new Date(y, m2-1).toLocaleString('es', {month:'long', year:'numeric'});
+  document.getElementById('headerSub').textContent =
+    `Mes: ${label} · ${S.leads.length} leads calificadas · ${S.activated.length} activaciones`;
+  document.getElementById('footer').textContent =
+    'Última actualización: ' + new Date().toLocaleString('es');
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+function renderBonos(C) {
+  const eq = document.getElementById('bonoEqCard');
+  eq.className = 'bono-card ' + (C.bonoEq ? 'bono-active' : 'bono-inactive');
+  document.getElementById('bonoEqVal').textContent = C.bonoEq ? '✅ ACTIVADO' : '❌ No alcanzado';
+  document.getElementById('bonoEqDet').textContent =
+    `${C.totalAct} clientes activados en el mes (meta ≥${BONO_EQ_MIN})`;
+
+  const comp = document.getElementById('bonoCompCard');
+  comp.className = 'bono-card ' + (C.winner ? 'bono-active' : 'bono-inactive');
+  document.getElementById('bonoCompVal').textContent =
+    C.winner === 'A' ? '✅ Gana Pod A' : C.winner === 'B' ? '✅ Gana Pod B' : '❌ Sin ganador';
+  document.getElementById('bonoCompDet').textContent =
+    `Pod A: ${C.podAOut} clientes, ${C.podADem} demos · Pod B: ${C.podBOut} clientes, ${C.podBDem} demos`;
+}
+
+function renderPodCards(C) {
+  [
+    { id:OID.MARIA,  cid:'card-maria',  pod:'A', name:'María'  },
+    { id:OID.ANDREA, cid:'card-andrea', pod:'A', name:'Andrea' },
+    { id:OID.CARLOS, cid:'card-carlos', pod:'B', name:'Carlos' },
+    { id:OID.YAMILA, cid:'card-yamila', pod:'B', name:'Yamila' },
+  ].forEach(p => {
+    const d = C.sdr[p.id] || { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+    document.getElementById(p.cid).innerHTML = sdrCardHTML(p.name, p.pod, d);
+  });
+
+  [
+    { id:OID.ROCIO,   cid:'card-rocio',   pod:'A', name:'Rocío',   sk:'caRocio',   lk:'ca_rocio'   },
+    { id:OID.AGUSTIN, cid:'card-agustin', pod:'B', name:'Agustín', sk:'caAgustin', lk:'ca_agustin' },
+  ].forEach(p => {
+    const d = C.kam[p.id] || { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+    document.getElementById(p.cid).innerHTML = kamCardHTML(p.name, p.pod, d, p.sk, p.lk);
+  });
+
+  const podAIndiv = ((C.sdr[OID.MARIA]?.pts||0) + (C.sdr[OID.ANDREA]?.pts||0)) / 2;
+  const podBIndiv = ((C.sdr[OID.CARLOS]?.pts||0) + (C.sdr[OID.YAMILA]?.pts||0)) / 2;
+  document.getElementById('podASubtitle').textContent = `SDR avg: ${podAIndiv.toFixed(1)}/${SDR_TARGET} pts`;
+  document.getElementById('podBSubtitle').textContent = `SDR avg: ${podBIndiv.toFixed(1)}/${SDR_TARGET} pts`;
+}
+
+function sdrCardHTML(name, pod, d) {
+  const p = d.pts / SDR_TARGET;
+  const color = p>=1?'#10B981':p>=0.5?'#F59E0B':'#EF4444';
+  const w = Math.min(p*100,100).toFixed(0);
+  return `
+    <div class="person-name">${name}</div>
+    <div class="person-role">SDR · Pod ${pod}</div>
+    <div class="kpi-lbl"><span>Leads calificadas</span><strong>${d.pts.toFixed(1)} / ${SDR_TARGET} pts</strong></div>
+    <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      ${badge(p)}
+      <div class="n-row">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>
+    </div>`;
+}
+
+function kamCardHTML(name, pod, d, sk, lk) {
+  const ncPct  = d.pts / KAM_NC_TARGET;
+  const caRaw  = S[sk] !== '' ? parseFloat(S[sk]) : null;
+  const caPct  = caRaw !== null ? caRaw / KAM_CA_TARGET : null;
+  const indiv  = caPct !== null ? 0.5*ncPct + 0.5*caPct : ncPct * 0.5;
+  const color  = ncPct>=1?'#10B981':ncPct>=0.5?'#F59E0B':'#EF4444';
+  const w      = Math.min(ncPct*100,100).toFixed(0);
+  return `
+    <div class="person-name">${name}</div>
+    <div class="person-role">KAM · Pod ${pod}</div>
+    <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${KAM_NC_TARGET} pts</strong></div>
+    <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
+    <div class="sep"></div>
+    <div class="kpi-lbl" style="margin-bottom:4px;">
+      <span>% Cartera activa</span>
+      <span style="color:#F59E0B;font-size:10px;">✏ manual</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <input class="manual-input" type="number" min="0" max="100" placeholder="%"
+        value="${S[sk]}" oninput="saveCA('${lk}','${sk}',this.value)">
+      <span style="font-size:11px;color:var(--text-muted);">/ 80% meta</span>
+      ${caPct !== null ? badge(caPct) : '<span style="font-size:10px;color:#9CA3AF;">ingresá %</span>'}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+      <span style="font-size:11px;color:var(--text-muted);">Cumpl. individual:</span>
+      ${badge(indiv)}
+    </div>
+    <div class="n-row" style="margin-top:6px;">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>`;
+}
+
+function nPill(n, v) {
+  return v ? `<span class="n-pill hit">${n}×${v}</span>` : `<span class="n-pill">${n}</span>`;
+}
+
+function renderPodCompare(C) {
+  const maxO = Math.max(C.podAOut, C.podBOut, POD_TARGET, 1);
+  const maxD = Math.max(C.podADem, C.podBDem, COMP_MIN_DEMOS, 1);
+  document.getElementById('podCompareCard').innerHTML = `
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;padding:4px 0 8px;border-bottom:2px solid var(--border);margin-bottom:4px;">
+      <div></div>
+      <div class="compare-head" style="color:var(--pod-a);">Pod A · María · Andrea · Rocío</div>
+      <div class="compare-head" style="color:var(--pod-b);">Pod B · Carlos · Yamila · Agustín</div>
+    </div>
+    ${cmpRow('Clientes outbound', C.podAOut, C.podBOut, POD_TARGET,     '#3B82F6','#8B5CF6', maxO, true)}
+    ${cmpRow('Demos realizadas',  C.podADem, C.podBDem, COMP_MIN_DEMOS, '#3B82F6','#8B5CF6', maxD, false)}
+    <div style="margin-top:10px;display:flex;gap:20px;font-size:11px;color:var(--text-muted);flex-wrap:wrap;">
+      <span>Meta outbound: <strong>${POD_TARGET} clientes</strong></span>
+      <span>Mín. demos (bono comp.): <strong>${COMP_MIN_DEMOS}</strong></span>
+      <span>Mín. clientes (bono comp.): <strong>${COMP_MIN_CLI}</strong></span>
+    </div>`;
+}
+
+function cmpRow(lbl, a, b, target, ca, cb, maxV, showTarget) {
+  const wa = Math.min((a/maxV)*100,100).toFixed(0);
+  const wb = Math.min((b/maxV)*100,100).toFixed(0);
+  const fa = a>=target?`<strong style="color:${ca}">${a}</strong>`:`<strong style="color:#EF4444">${a}</strong>`;
+  const fb = b>=target?`<strong style="color:${cb}">${b}</strong>`:`<strong style="color:#EF4444">${b}</strong>`;
+  const tLine = showTarget
+    ? `<div style="position:absolute;left:${Math.min((target/maxV)*100,100)}%;top:0;bottom:0;width:2px;background:#374151;opacity:.3;"></div>`
+    : '';
+  return `<div class="compare-grid">
+    <div class="compare-lbl">${lbl}</div>
+    <div class="compare-bar-wrap">
+      <div class="compare-track" style="position:relative;">${tLine}<div class="compare-fill" style="width:${wa}%;background:${ca};"></div></div>
+      <div class="compare-num">${fa}</div>
+    </div>
+    <div class="compare-bar-wrap">
+      <div class="compare-track" style="position:relative;">${tLine}<div class="compare-fill" style="width:${wb}%;background:${cb};"></div></div>
+      <div class="compare-num">${fb}</div>
+    </div>
+  </div>`;
+}
+
+function renderVarFinal(C) {
+  const podACumpl = Math.min(C.podAOut / POD_TARGET, 2);
+  const podBCumpl = Math.min(C.podBOut / POD_TARGET, 2);
+
+  const people = [
+    { key:'MARIA',   name:'María',   role:'SDR', pod:'A' },
+    { key:'ANDREA',  name:'Andrea',  role:'SDR', pod:'A' },
+    { key:'CARLOS',  name:'Carlos',  role:'SDR', pod:'B' },
+    { key:'YAMILA',  name:'Yamila',  role:'SDR', pod:'B' },
+    { key:'ROCIO',   name:'Rocío',   role:'KAM', pod:'A' },
+    { key:'AGUSTIN', name:'Agustín', role:'KAM', pod:'B' },
+  ];
+
+  const rows = people.map(p => {
+    const oid = OID[p.key];
+    let indivPct = 0;
+    if (p.role === 'SDR') {
+      indivPct = (C.sdr[oid]?.pts || 0) / SDR_TARGET;
+    } else {
+      const ncPct = (C.kam[oid]?.pts || 0) / KAM_NC_TARGET;
+      const sk    = p.key === 'ROCIO' ? 'caRocio' : 'caAgustin';
+      const caRaw = S[sk] !== '' ? parseFloat(S[sk]) : 0;
+      indivPct    = 0.5 * ncPct + 0.5 * (caRaw / KAM_CA_TARGET);
+    }
+    const podCumpl = p.pod === 'A' ? podACumpl : podBCumpl;
+    const combined = 0.7 * indivPct + 0.3 * podCumpl;
+    const bEq      = C.bonoEq          ? 0.10 : 0;
+    const bComp    = C.winner === p.pod ? 0.10 : 0;
+    const floor    = combined >= FLOOR;
+    const finalP   = floor ? combined + bEq + bComp : 0;
+    const pc       = p.pod === 'A' ? 'var(--pod-a)' : 'var(--pod-b)';
+
+    return `<tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;font-weight:600;">${p.role}</span></td>
+      <td><span style="font-size:12px;color:${pc};font-weight:700;">Pod ${p.pod}</span></td>
+      <td>${colorPct(indivPct)}</td>
+      <td>${colorPct(podCumpl)}</td>
+      <td style="color:${bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${bEq>0?'+10%':'—'}</td>
+      <td style="color:${bComp>0?'#059669':'#9CA3AF'};font-weight:600;">${bComp>0?'+10%':'—'}</td>
+      <td class="pct-big" style="color:${finalP>=0.8?'#059669':finalP>=0.5?'#D97706':'#DC2626'}">${pct(finalP)}</td>
+      <td>${floor ? '✅' : '<span title="Bajo el piso del 30%">❌ piso</span>'}</td>
+    </tr>`;
+  });
+
+  document.getElementById('varBody').innerHTML = rows.join('');
+}
+
+// ════════════════════════════════════════════════════
+// RENDER — SÁBANA
+// ════════════════════════════════════════════════════
+function renderSabana() {
+  const C = compute();
+  const mv = document.getElementById('monthPicker').value;
+
+  // ── Leads calificadas
+  document.getElementById('leadsCount').textContent = S.leads.length;
+  const leadsRows = S.leads.map(d => {
+    const p   = d.properties;
+    const sdr = p.sdr__que_agendo_;
+    const vol = p.promedio___volumen_operado_al_mes__detallado_ || '—';
+    const pts = N_MAP[vol] || 0;
+    const nl  = N_LABEL[vol] || '—';
+    const dt  = p.hs_v2_date_exited_965485717
+      ? p.hs_v2_date_exited_965485717.slice(0,10) : '—';
+    const pip = PIPELINE_NAMES[p.pipeline] || p.pipeline || '—';
+    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : null;
+    return `<tr>
+      <td style="font-weight:600;">${p.dealname || '—'}</td>
+      <td>${sdrName
+        ? `<span class="badge badge-blue">${sdrName}</span>`
+        : '<span class="no-sdr">Sin SDR</span>'}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${pip}</td>
+      <td style="font-size:11px;">${dt}</td>
+      <td><span style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</span></td>
+      <td>${pts > 0
+        ? `<strong style="color:#1D4ED8;">${nl} · ${pts}pt</strong>`
+        : '<span style="color:#9CA3AF;">—</span>'}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
+  document.getElementById('sabanaLeadsBody').innerHTML = leadsRows;
+
+  // ── Nuevos clientes activados
+  document.getElementById('activationsCount').textContent = S.activated.length;
+  const actIds = new Set(S.kamExit.map(d => String(d.id)));
+  const actRows = S.activated.map(d => {
+    const p    = d.properties;
+    const kam  = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
+    const sdr  = p.sdr__que_agendo_;
+    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : '—';
+    const vol  = p.promedio___volumen_operado_al_mes__detallado_ || '—';
+    const pts  = N_MAP[vol] || 0;
+    const nl   = N_LABEL[vol] || '—';
+    const fa   = p.fecha_activacion || '—';
+    const src  = p.fuente_principal_de_lead || '—';
+    const hasExit = actIds.has(String(d.id));
+    const ctrl = hasExit
+      ? '<span style="color:#059669;font-weight:600;">✓ doble control</span>'
+      : '<span style="color:#9CA3AF;font-size:11px;">solo fecha act.</span>';
+    return `<tr>
+      <td style="font-weight:600;">${p.dealname || '—'}</td>
+      <td><span class="badge badge-green">${kam}</span></td>
+      <td style="font-size:11px;color:var(--text-muted);">${sdrName}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${src}</td>
+      <td style="font-size:11px;">${fa}</td>
+      <td style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td>${pts > 0
+        ? `<strong style="color:#059669;">${nl} · ${pts}pt</strong>`
+        : '<span style="color:#9CA3AF;">—</span>'}</td>
+      <td>${ctrl}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
+  document.getElementById('sabanaActBody').innerHTML = actRows;
+
+  // ── Alertas doble control
+  if (C.alerts.length > 0) {
+    document.getElementById('alertSection').style.display = '';
+    document.getElementById('alertsCount').textContent = C.alerts.length;
+    const alertRows = C.alerts.map(d => {
+      const p   = d.properties;
+      const kam = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
+      const dt  = p.hs_v2_date_exited_29556535
+        ? p.hs_v2_date_exited_29556535.slice(0,10) : '—';
+      const fa  = p.fecha_activacion || '<span style="color:#EF4444;">vacía</span>';
+      return `<tr style="background:#FFFBEB;">
+        <td style="font-weight:600;">${p.dealname || '—'}</td>
+        <td><span class="badge badge-amber">${kam}</span></td>
+        <td style="font-size:11px;">${dt}</td>
+        <td style="font-size:11px;">${fa}</td>
+        <td style="font-size:11px;color:#92400E;font-weight:600;">Verificar y completar fecha_activacion en HubSpot</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('sabanaAlertBody').innerHTML = alertRows;
+  } else {
+    document.getElementById('alertSection').style.display = 'none';
+  }
+
+  document.getElementById('footer2').textContent =
+    'Última actualización: ' + new Date().toLocaleString('es');
+}
+
+// ════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════
+function badge(p) {
+  const lbl = pct(p);
+  if (p >= 1)   return `<span class="badge badge-green">${lbl}</span>`;
+  if (p >= 0.5) return `<span class="badge badge-amber">${lbl}</span>`;
+  if (p >= 0.3) return `<span class="badge badge-amber">${lbl}</span>`;
+  return `<span class="badge badge-red">${lbl}</span>`;
+}
+function colorPct(p) {
+  const c = p>=1?'#059669':p>=0.5?'#D97706':'#DC2626';
+  return `<span style="font-weight:600;color:${c}">${pct(p)}</span>`;
+}
+function pct(p) { return (p*100).toFixed(0)+'%'; }
+
+function saveCA(lk, sk, v) {
+  localStorage.setItem(lk, v);
+  S[sk] = v;
+  if (S.activated.length || S.leads.length) { render(); renderSabana(); }
+}
+
+function setLoading(show, msg) {
+  document.getElementById('loadingOverlay').className = 'loading-overlay' + (show ? '' : ' hidden');
+  if (msg) document.getElementById('loadingText').textContent = msg;
+}
+
+function setError(msg) {
+  const el = document.getElementById('errorBanner');
+  if (msg) {
+    el.textContent = '⚠️ ' + msg;
+    el.className = 'error-banner show';
+    document.getElementById('mainContent').style.display = 'block';
+  } else {
+    el.className = 'error-banner';
+  }
+}
+</script>
+</body>
+</html>
