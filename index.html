@@ -403,7 +403,7 @@ async function callHS(body) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    throw new Error(err.error || err.message || JSON.stringify(err) || `HTTP ${res.status}`);
   }
   return res.json();
 }
@@ -430,10 +430,10 @@ async function loadData() {
   if (!mv) { setError('Seleccioná un mes.'); setLoading(false); return; }
 
   const [y, m] = mv.split('-').map(Number);
-  const d1  = `${y}-${String(m).padStart(2,'0')}-01`;
+  const d1  = `${y}-${String(m).padStart(2,'00')}-01`;
   const nm  = m === 12 ? 1 : m + 1;
   const ny  = m === 12 ? y + 1 : y;
-  const d2  = `${ny}-${String(nm).padStart(2,'0')}-01`;
+  const d2  = `${ny}-${String(nm).padStart(2,'00')}-01`;
   const d1ms = String(new Date(d1 + 'T00:00:00.000Z').getTime());
   const d2ms = String(new Date(d2 + 'T00:00:00.000Z').getTime());
 
@@ -460,8 +460,7 @@ async function loadData() {
         filterGroups: [{ filters: [
           { propertyName:'hs_v2_date_exited_965485717', operator:'GTE', value:d1ms },
           { propertyName:'hs_v2_date_exited_965485717', operator:'LT',  value:d2ms },
-          { propertyName:'pipeline', operator:'IN',
-            values:['default','53531296','10153632'] },
+          { propertyName:'pipeline', operator:'NEQ', value:'656358057' },
         ]}],
         limit: 200,
       }),
