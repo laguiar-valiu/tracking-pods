@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tracking 2.0 â Pods Comerciales Â· Valiu</title>
+<title>Tracking 2.0 — Pods Comerciales · Valiu</title>
 <style>
 :root {
   color-scheme: light;
@@ -26,7 +26,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
 
-/* ââ Header ââ */
+/* ── Header ── */
 .header { background: #0F172A; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 10; }
 .header-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
 .header-sub { font-size: 11px; color: #94A3B8; margin-top: 2px; }
@@ -36,35 +36,35 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .btn:hover { opacity: .82; }
 .btn-primary { background: #3B82F6; color: white; }
 
-/* ââ Tabs ââ */
+/* ── Tabs ── */
 .tabs { background: #1E293B; padding: 0 24px; display: flex; gap: 4px; }
 .tab-btn { background: none; border: none; color: #94A3B8; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; }
 .tab-btn:hover { color: white; }
 .tab-btn.active { color: white; border-bottom-color: #3B82F6; }
 
-/* ââ Loading ââ */
+/* ── Loading ── */
 .loading-overlay { position: fixed; inset: 0; background: rgba(248,250,252,.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
 .spinner { width: 36px; height: 36px; border: 3px solid #E2E8F0; border-top-color: #3B82F6; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-overlay.hidden { display: none; }
 .loading-text { color: #475569; font-size: 13px; }
 
-/* ââ Layout ââ */
+/* ── Layout ── */
 .main { padding: 20px 24px; max-width: 1380px; margin: 0 auto; }
 .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 20px 0 10px; }
 .section-title:first-child { margin-top: 0; }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-/* ââ Error ââ */
+/* ── Error ── */
 .error-banner { background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: var(--radius); margin-bottom: 14px; display: none; font-size: 13px; }
 .error-banner.show { display: block; }
 
-/* ââ Alert banner ââ */
+/* ── Alert banner ── */
 .alert-banner { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 14px; font-size: 12px; display: none; }
 .alert-banner.show { display: block; }
 
-/* ââ Bono cards ââ */
+/* ── Bono cards ── */
 .bono-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
 .bono-card { border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: flex-start; gap: 14px; border: 1px solid; }
 .bono-card.bono-pending  { background: #FFFBEB; border-color: #FDE68A; }
@@ -78,7 +78,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .bono-card.bono-pending  .bono-val { color: #92400E; }
 .bono-det { font-size: 12px; color: var(--text-muted); }
 
-/* ââ Pod sections ââ */
+/* ── Pod sections ── */
 .pod-section { border-radius: var(--radius); border: 2px solid; overflow: hidden; }
 .pod-section.pod-a { border-color: var(--pod-a-mid); }
 .pod-section.pod-b { border-color: var(--pod-b-mid); }
@@ -88,7 +88,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .pod-sub { font-size: 12px; font-weight: 400; opacity: .85; }
 .pod-body { background: white; display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 12px; }
 
-/* ââ Person card ââ */
+/* ── Person card ── */
 .person-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
 .person-name { font-weight: 700; font-size: 14px; }
 .person-role { font-size: 11px; color: var(--text-muted); margin: 2px 0 10px; }
@@ -103,7 +103,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .manual-input { border: 1px dashed #D1D5DB; background: #FEFCE8; padding: 3px 7px; border-radius: 6px; width: 60px; font-size: 13px; text-align: center; }
 .manual-input:focus { outline: none; border-color: #F59E0B; background: #FFFBEB; }
 
-/* ââ Badge ââ */
+/* ── Badge ── */
 .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 .badge-green  { background: #D1FAE5; color: #065F46; }
 .badge-amber  { background: #FEF3C7; color: #92400E; }
@@ -111,7 +111,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .badge-blue   { background: #DBEAFE; color: #1E40AF; }
 .badge-gray   { background: #F3F4F6; color: #6B7280; }
 
-/* ââ Pod compare ââ */
+/* ── Pod compare ── */
 .compare-grid { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
 .compare-grid:last-child { border-bottom: none; }
 .compare-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
@@ -121,7 +121,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .compare-num { width: 30px; font-size: 13px; font-weight: 800; text-align: right; }
 .compare-head { font-size: 12px; font-weight: 700; text-align: center; padding: 6px 0; }
 
-/* ââ Variable table ââ */
+/* ── Variable table ── */
 .var-table { width: 100%; border-collapse: collapse; }
 .var-table th { background: #F8FAFC; padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
 .var-table td { padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-size: 13px; vertical-align: middle; }
@@ -129,7 +129,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .var-table tr:hover td { background: #FAFAFA; }
 .pct-big { font-size: 15px; font-weight: 800; }
 
-/* ââ SÃ¡bana ââ */
+/* ── Sábana ── */
 .sabana-section { margin-bottom: 28px; }
 .sabana-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 .sabana-count { font-size: 11px; font-weight: 600; background: #E0F2FE; color: #0369A1; padding: 2px 8px; border-radius: 20px; }
@@ -141,7 +141,7 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 .no-sdr { font-size: 10px; font-weight: 600; background: #FEF3C7; color: #92400E; padding: 1px 6px; border-radius: 4px; }
 .alert-flag { font-size: 11px; }
 
-/* ââ Footer ââ */
+/* ── Footer ── */
 .footer { font-size: 11px; color: #94A3B8; text-align: center; padding: 16px; }
 
 @media (max-width: 900px) {
@@ -156,23 +156,23 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="loading-text" id="loadingText">Cargando datos de HubSpotâ¦</div>
+  <div class="loading-text" id="loadingText">Cargando datos de HubSpot…</div>
 </div>
 
 <div class="header">
   <div>
-    <div class="header-title">ð Tracking 2.0 â Pods Comerciales</div>
-    <div class="header-sub" id="headerSub">Valiu Â· cargandoâ¦</div>
+    <div class="header-title">🏆 Tracking 2.0 — Pods Comerciales</div>
+    <div class="header-sub" id="headerSub">Valiu · cargando…</div>
   </div>
   <div class="header-controls">
     <input type="month" id="monthPicker">
-    <button class="btn btn-primary" onclick="loadData()">âº Actualizar</button>
+    <button class="btn btn-primary" onclick="loadData()">↺ Actualizar</button>
   </div>
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" id="tab-dashboard" onclick="switchTab('dashboard')">ð Dashboard</button>
-  <button class="tab-btn" id="tab-sabana" onclick="switchTab('sabana')">ð SÃ¡bana</button>
+  <button class="tab-btn active" id="tab-dashboard" onclick="switchTab('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn" id="tab-sabana" onclick="switchTab('sabana')">📋 Sábana</button>
 </div>
 
 <div class="main" id="mainContent" style="display:none;">
@@ -180,30 +180,30 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
   <div class="error-banner" id="errorBanner"></div>
   <div class="alert-banner" id="alertBanner"></div>
 
-  <!-- ââ DASHBOARD TAB ââ -->
+  <!-- ── DASHBOARD TAB ── -->
   <div id="tabDashboard">
 
-    <div class="section-title">â­ Bonos del mes</div>
+    <div class="section-title">⭐ Bonos del mes</div>
     <div class="bono-wrap">
       <div class="bono-card bono-pending" id="bonoEqCard">
-        <div class="bono-icon">ð¤</div>
+        <div class="bono-icon">🤝</div>
         <div>
-          <div class="bono-label">Bono Equipo Â· +10pp</div>
-          <div class="bono-val" id="bonoEqVal">â</div>
-          <div class="bono-det" id="bonoEqDet">Valiu activa â¥10 clientes/mes (todos los canales)</div>
+          <div class="bono-label">Bono Equipo · +10pp</div>
+          <div class="bono-val" id="bonoEqVal">—</div>
+          <div class="bono-det" id="bonoEqDet">Valiu activa ≥10 clientes/mes (todos los canales)</div>
         </div>
       </div>
       <div class="bono-card bono-pending" id="bonoCompCard">
-        <div class="bono-icon">ð</div>
+        <div class="bono-icon">🏆</div>
         <div>
-          <div class="bono-label">Bono Competencia Â· +10pp</div>
-          <div class="bono-val" id="bonoCompVal">â</div>
-          <div class="bono-det" id="bonoCompDet">MÃ¡s outbound + mÃ­n. 4 demos y 3 clientes por pod</div>
+          <div class="bono-label">Bono Competencia · +10pp</div>
+          <div class="bono-val" id="bonoCompVal">—</div>
+          <div class="bono-det" id="bonoCompDet">Más outbound + mín. 4 demos y 3 clientes por pod</div>
         </div>
       </div>
     </div>
 
-    <div class="section-title">ð¤ Performance individual</div>
+    <div class="section-title">👤 Performance individual</div>
     <div class="grid-2" style="margin-bottom:18px;">
       <div class="pod-section pod-a">
         <div class="pod-header">
@@ -229,10 +229,10 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
       </div>
     </div>
 
-    <div class="section-title">ð¤ Clientes outbound activados â componente pod (meta: 6/mes)</div>
+    <div class="section-title">🤝 Clientes outbound activados — componente pod (meta: 6/mes)</div>
     <div class="card" style="margin-bottom:18px;" id="podCompareCard"></div>
 
-    <div class="section-title">ð° Variable final</div>
+    <div class="section-title">💰 Variable final</div>
     <div class="card" style="margin-bottom:18px; overflow-x:auto;">
       <table class="var-table">
         <thead>
@@ -250,14 +250,14 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
     <div class="footer" id="footer"></div>
   </div>
 
-  <!-- ââ SÃBANA TAB ââ -->
+  <!-- ── SÁBANA TAB ── -->
   <div id="tabSabana" style="display:none;">
 
     <div class="sabana-section">
       <div class="sabana-title">
-        ð¯ Leads calificadas
+        🎯 Leads calificadas
         <span class="sabana-count" id="leadsCount">0</span>
-        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Salida de Demo Agendada â pipeline Ventas / Apertura / CS</span>
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Salida de Demo Agendada → pipeline Ventas / Apertura / CS</span>
       </div>
       <div class="card" style="overflow-x:auto;">
         <table class="sabana-table">
@@ -273,15 +273,15 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 
     <div class="sabana-section">
       <div class="sabana-title">
-        â Nuevos clientes activados
+        ✅ Nuevos clientes activados
         <span class="sabana-count" id="activationsCount">0</span>
-        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Por fecha de activaciÃ³n</span>
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Por fecha de activación</span>
       </div>
       <div class="card" style="overflow-x:auto;">
         <table class="sabana-table">
           <thead>
             <tr>
-              <th>Deal</th><th>KAM</th><th>SDR</th><th>Fuente</th><th>Fecha activaciÃ³n</th><th>Volumen</th><th>Pts</th><th>Control</th>
+              <th>Deal</th><th>KAM</th><th>SDR</th><th>Fuente</th><th>Fecha activación</th><th>Volumen</th><th>Pts</th><th>Control</th>
             </tr>
           </thead>
           <tbody id="sabanaActBody"></tbody>
@@ -291,14 +291,14 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 
     <div class="sabana-section" id="alertSection" style="display:none;">
       <div class="sabana-title">
-        â ï¸ A resolver â salieron de "Cuenta sin activaciÃ³n" pero sin fecha de activaciÃ³n
+        ⚠️ A resolver — salieron de "Cuenta sin activación" pero sin fecha de activación
         <span class="sabana-count" id="alertsCount" style="background:#FEF3C7;color:#92400E;">0</span>
       </div>
       <div class="card" style="overflow-x:auto;">
         <table class="sabana-table">
           <thead>
             <tr>
-              <th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activaciÃ³n</th><th>AcciÃ³n</th>
+              <th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th>
             </tr>
           </thead>
           <tbody id="sabanaAlertBody"></tbody>
@@ -312,9 +312,9 @@ input[type="month"] { border: 1px solid #475569; background: #1E293B; color: whi
 </div>
 
 <script>
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // CONSTANTS
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 const OID = {
   MARIA:   '729221560',
   ANDREA:  '91653845',
@@ -324,12 +324,12 @@ const OID = {
   AGUSTIN: '209899615',
 };
 const OWNER_NAME = {
-  '729221560':  'MarÃ­a',
+  '729221560':  'María',
   '91653845':   'Andrea',
   '90253953':   'Carlos',
   '77904392':   'Yamila',
-  '2104711324': 'RocÃ­o',
-  '209899615':  'AgustÃ­n',
+  '2104711324': 'Rocío',
+  '209899615':  'Agustín',
 };
 
 const POD_A_SDRS = [OID.MARIA, OID.ANDREA];
@@ -355,7 +355,7 @@ const PIPELINE_NAMES = {
   'default':   'Ventas',
   '53531296':  'Apertura de Cuentas',
   '10153632':  'Customer Success',
-  '656358057': 'ProspecciÃ³n',
+  '656358057': 'Prospección',
 };
 
 const NON_OUTBOUND  = ['Referidos por clientes', 'Friends & Families'];
@@ -369,9 +369,9 @@ const COMP_MIN_DEMOS = 4;
 const COMP_MIN_CLI   = 3;
 const FLOOR          = 0.30;
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // STATE
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 const S = {
   activated: [],   // fecha_activacion in month
   leads: [],       // exited Demo Agendada + in Ventas/Apertura/CS
@@ -380,9 +380,9 @@ const S = {
   caAgustin: localStorage.getItem('ca_agustin') || '',
 };
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // TABS
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 let activeTab = 'dashboard';
 function switchTab(t) {
   activeTab = t;
@@ -392,9 +392,9 @@ function switchTab(t) {
   document.getElementById('tab-sabana').className    = 'tab-btn' + (t === 'sabana'    ? ' active' : '');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // API
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 async function callHS(body) {
   const res = await fetch('/api/hubspot', {
     method: 'POST',
@@ -408,9 +408,9 @@ async function callHS(body) {
   return res.json();
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // INIT
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
   document.getElementById('monthPicker').value =
@@ -418,16 +418,16 @@ window.addEventListener('DOMContentLoaded', () => {
   loadData();
 });
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // LOAD DATA
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 async function loadData() {
-  setLoading(true, 'Cargando datos de HubSpotâ¦');
+  setLoading(true, 'Cargando datos de HubSpot…');
   setError(null);
   document.getElementById('mainContent').style.display = 'none';
 
   const mv = document.getElementById('monthPicker').value;
-  if (!mv) { setError('SeleccionÃ¡ un mes.'); setLoading(false); return; }
+  if (!mv) { setError('Seleccioná un mes.'); setLoading(false); return; }
 
   const [y, m] = mv.split('-').map(Number);
   const d1  = `${y}-${String(m).padStart(2,'0')}-01`;
@@ -440,7 +440,7 @@ async function loadData() {
   try {
     const [actRes, leadRes, exitRes] = await Promise.all([
 
-      // Q1 â Nuevos clientes (fecha_activacion)
+      // Q1 — Nuevos clientes (fecha_activacion)
       callHS({
         properties: ['dealname','hubspot_owner_id','sdr__que_agendo_',
                      'fecha_activacion','fuente_principal_de_lead',
@@ -452,7 +452,7 @@ async function loadData() {
         limit: 200,
       }),
 
-      // Q2 â Leads calificadas (salida Demo Agendada + pipeline â  ProspecciÃ³n)
+      // Q2 — Leads calificadas (salida Demo Agendada + pipeline ≠ Prospección)
       callHS({
         properties: ['dealname','sdr__que_agendo_',
                      'hs_v2_date_exited_965485717',
@@ -465,7 +465,7 @@ async function loadData() {
         limit: 200,
       }),
 
-      // Q3 â Double control KAM: saliÃ³ de "Cuenta abierta / Sin activaciÃ³n"
+      // Q3 — Double control KAM: salió de "Cuenta abierta / Sin activación"
       callHS({
         properties: ['dealname','hubspot_owner_id','fecha_activacion',
                      'hs_v2_date_exited_29556535',
@@ -492,9 +492,9 @@ async function loadData() {
   }
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // COMPUTE
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 function compute() {
   // SDR points from leads
   const sdr = {};
@@ -563,16 +563,16 @@ function compute() {
   return { sdr, kam, podAOut, podBOut, podADem, podBDem, totalAct, bonoEq, winner, alerts };
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// RENDER â DASHBOARD
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
+// RENDER — DASHBOARD
+// ════════════════════════════════════════════════════
 function render() {
   const C = compute();
 
   // Alert banner
   if (C.alerts.length > 0) {
     const el = document.getElementById('alertBanner');
-    el.innerHTML = `â ï¸ <strong>${C.alerts.length} deal${C.alerts.length>1?'s':''} a resolver</strong>: salieron de "Cuenta sin activaciÃ³n" pero no tienen fecha de activaciÃ³n correcta. Ver pestaÃ±a <strong>SÃ¡bana</strong>.`;
+    el.innerHTML = `⚠️ <strong>${C.alerts.length} deal${C.alerts.length>1?'s':''} a resolver</strong>: salieron de "Cuenta sin activación" pero no tienen fecha de activación correcta. Ver pestaña <strong>Sábana</strong>.`;
     el.className = 'alert-banner show';
   } else {
     document.getElementById('alertBanner').className = 'alert-banner';
@@ -587,30 +587,30 @@ function render() {
   const [y, m2] = mv.split('-').map(Number);
   const label = new Date(y, m2-1).toLocaleString('es', {month:'long', year:'numeric'});
   document.getElementById('headerSub').textContent =
-    `Mes: ${label} Â· ${S.leads.length} leads calificadas Â· ${S.activated.length} activaciones`;
+    `Mes: ${label} · ${S.leads.length} leads calificadas · ${S.activated.length} activaciones`;
   document.getElementById('footer').textContent =
-    'Ãltima actualizaciÃ³n: ' + new Date().toLocaleString('es');
+    'Última actualización: ' + new Date().toLocaleString('es');
   document.getElementById('mainContent').style.display = 'block';
 }
 
 function renderBonos(C) {
   const eq = document.getElementById('bonoEqCard');
   eq.className = 'bono-card ' + (C.bonoEq ? 'bono-active' : 'bono-inactive');
-  document.getElementById('bonoEqVal').textContent = C.bonoEq ? 'â ACTIVADO' : 'â No alcanzado';
+  document.getElementById('bonoEqVal').textContent = C.bonoEq ? '✅ ACTIVADO' : '❌ No alcanzado';
   document.getElementById('bonoEqDet').textContent =
-    `${C.totalAct} clientes activados en el mes (meta â¥${BONO_EQ_MIN})`;
+    `${C.totalAct} clientes activados en el mes (meta ≥${BONO_EQ_MIN})`;
 
   const comp = document.getElementById('bonoCompCard');
   comp.className = 'bono-card ' + (C.winner ? 'bono-active' : 'bono-inactive');
   document.getElementById('bonoCompVal').textContent =
-    C.winner === 'A' ? 'â Gana Pod A' : C.winner === 'B' ? 'â Gana Pod B' : 'â Sin ganador';
+    C.winner === 'A' ? '✅ Gana Pod A' : C.winner === 'B' ? '✅ Gana Pod B' : '❌ Sin ganador';
   document.getElementById('bonoCompDet').textContent =
-    `Pod A: ${C.podAOut} clientes, ${C.podADem} demos Â· Pod B: ${C.podBOut} clientes, ${C.podBDem} demos`;
+    `Pod A: ${C.podAOut} clientes, ${C.podADem} demos · Pod B: ${C.podBOut} clientes, ${C.podBDem} demos`;
 }
 
 function renderPodCards(C) {
   [
-    { id:OID.MARIA,  cid:'card-maria',  pod:'A', name:'MarÃ­a'  },
+    { id:OID.MARIA,  cid:'card-maria',  pod:'A', name:'María'  },
     { id:OID.ANDREA, cid:'card-andrea', pod:'A', name:'Andrea' },
     { id:OID.CARLOS, cid:'card-carlos', pod:'B', name:'Carlos' },
     { id:OID.YAMILA, cid:'card-yamila', pod:'B', name:'Yamila' },
@@ -620,8 +620,8 @@ function renderPodCards(C) {
   });
 
   [
-    { id:OID.ROCIO,   cid:'card-rocio',   pod:'A', name:'RocÃ­o',   sk:'caRocio',   lk:'ca_rocio'   },
-    { id:OID.AGUSTIN, cid:'card-agustin', pod:'B', name:'AgustÃ­n', sk:'caAgustin', lk:'ca_agustin' },
+    { id:OID.ROCIO,   cid:'card-rocio',   pod:'A', name:'Rocío',   sk:'caRocio',   lk:'ca_rocio'   },
+    { id:OID.AGUSTIN, cid:'card-agustin', pod:'B', name:'Agustín', sk:'caAgustin', lk:'ca_agustin' },
   ].forEach(p => {
     const d = C.kam[p.id] || { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
     document.getElementById(p.cid).innerHTML = kamCardHTML(p.name, p.pod, d, p.sk, p.lk);
@@ -639,7 +639,7 @@ function sdrCardHTML(name, pod, d) {
   const w = Math.min(p*100,100).toFixed(0);
   return `
     <div class="person-name">${name}</div>
-    <div class="person-role">SDR Â· Pod ${pod}</div>
+    <div class="person-role">SDR · Pod ${pod}</div>
     <div class="kpi-lbl"><span>Leads calificadas</span><strong>${d.pts.toFixed(1)} / ${SDR_TARGET} pts</strong></div>
     <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
     <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -657,19 +657,19 @@ function kamCardHTML(name, pod, d, sk, lk) {
   const w      = Math.min(ncPct*100,100).toFixed(0);
   return `
     <div class="person-name">${name}</div>
-    <div class="person-role">KAM Â· Pod ${pod}</div>
+    <div class="person-role">KAM · Pod ${pod}</div>
     <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${KAM_NC_TARGET} pts</strong></div>
     <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
     <div class="sep"></div>
     <div class="kpi-lbl" style="margin-bottom:4px;">
       <span>% Cartera activa</span>
-      <span style="color:#F59E0B;font-size:10px;">â manual</span>
+      <span style="color:#F59E0B;font-size:10px;">✏ manual</span>
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
       <input class="manual-input" type="number" min="0" max="100" placeholder="%"
         value="${S[sk]}" oninput="saveCA('${lk}','${sk}',this.value)">
       <span style="font-size:11px;color:var(--text-muted);">/ 80% meta</span>
-      ${caPct !== null ? badge(caPct) : '<span style="font-size:10px;color:#9CA3AF;">ingresÃ¡ %</span>'}
+      ${caPct !== null ? badge(caPct) : '<span style="font-size:10px;color:#9CA3AF;">ingresá %</span>'}
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
       <span style="font-size:11px;color:var(--text-muted);">Cumpl. individual:</span>
@@ -679,7 +679,7 @@ function kamCardHTML(name, pod, d, sk, lk) {
 }
 
 function nPill(n, v) {
-  return v ? `<span class="n-pill hit">${n}Ã${v}</span>` : `<span class="n-pill">${n}</span>`;
+  return v ? `<span class="n-pill hit">${n}×${v}</span>` : `<span class="n-pill">${n}</span>`;
 }
 
 function renderPodCompare(C) {
@@ -688,15 +688,15 @@ function renderPodCompare(C) {
   document.getElementById('podCompareCard').innerHTML = `
     <div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;padding:4px 0 8px;border-bottom:2px solid var(--border);margin-bottom:4px;">
       <div></div>
-      <div class="compare-head" style="color:var(--pod-a);">Pod A Â· MarÃ­a Â· Andrea Â· RocÃ­o</div>
-      <div class="compare-head" style="color:var(--pod-b);">Pod B Â· Carlos Â· Yamila Â· AgustÃ­n</div>
+      <div class="compare-head" style="color:var(--pod-a);">Pod A · María · Andrea · Rocío</div>
+      <div class="compare-head" style="color:var(--pod-b);">Pod B · Carlos · Yamila · Agustín</div>
     </div>
     ${cmpRow('Clientes outbound', C.podAOut, C.podBOut, POD_TARGET,     '#3B82F6','#8B5CF6', maxO, true)}
     ${cmpRow('Demos realizadas',  C.podADem, C.podBDem, COMP_MIN_DEMOS, '#3B82F6','#8B5CF6', maxD, false)}
     <div style="margin-top:10px;display:flex;gap:20px;font-size:11px;color:var(--text-muted);flex-wrap:wrap;">
       <span>Meta outbound: <strong>${POD_TARGET} clientes</strong></span>
-      <span>MÃ­n. demos (bono comp.): <strong>${COMP_MIN_DEMOS}</strong></span>
-      <span>MÃ­n. clientes (bono comp.): <strong>${COMP_MIN_CLI}</strong></span>
+      <span>Mín. demos (bono comp.): <strong>${COMP_MIN_DEMOS}</strong></span>
+      <span>Mín. clientes (bono comp.): <strong>${COMP_MIN_CLI}</strong></span>
     </div>`;
 }
 
@@ -726,12 +726,12 @@ function renderVarFinal(C) {
   const podBCumpl = Math.min(C.podBOut / POD_TARGET, 2);
 
   const people = [
-    { key:'MARIA',   name:'MarÃ­a',   role:'SDR', pod:'A' },
+    { key:'MARIA',   name:'María',   role:'SDR', pod:'A' },
     { key:'ANDREA',  name:'Andrea',  role:'SDR', pod:'A' },
     { key:'CARLOS',  name:'Carlos',  role:'SDR', pod:'B' },
     { key:'YAMILA',  name:'Yamila',  role:'SDR', pod:'B' },
-    { key:'ROCIO',   name:'RocÃ­o',   role:'KAM', pod:'A' },
-    { key:'AGUSTIN', name:'AgustÃ­n', role:'KAM', pod:'B' },
+    { key:'ROCIO',   name:'Rocío',   role:'KAM', pod:'A' },
+    { key:'AGUSTIN', name:'Agustín', role:'KAM', pod:'B' },
   ];
 
   const rows = people.map(p => {
@@ -759,83 +759,83 @@ function renderVarFinal(C) {
       <td><span style="font-size:12px;color:${pc};font-weight:700;">Pod ${p.pod}</span></td>
       <td>${colorPct(indivPct)}</td>
       <td>${colorPct(podCumpl)}</td>
-      <td style="color:${bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${bEq>0?'+10%':'â'}</td>
-      <td style="color:${bComp>0?'#059669':'#9CA3AF'};font-weight:600;">${bComp>0?'+10%':'â'}</td>
+      <td style="color:${bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${bEq>0?'+10%':'—'}</td>
+      <td style="color:${bComp>0?'#059669':'#9CA3AF'};font-weight:600;">${bComp>0?'+10%':'—'}</td>
       <td class="pct-big" style="color:${finalP>=0.8?'#059669':finalP>=0.5?'#D97706':'#DC2626'}">${pct(finalP)}</td>
-      <td>${floor ? 'â' : '<span title="Bajo el piso del 30%">â piso</span>'}</td>
+      <td>${floor ? '✅' : '<span title="Bajo el piso del 30%">❌ piso</span>'}</td>
     </tr>`;
   });
 
   document.getElementById('varBody').innerHTML = rows.join('');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// RENDER â SÃBANA
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
+// RENDER — SÁBANA
+// ════════════════════════════════════════════════════
 function renderSabana() {
   const C = compute();
   const mv = document.getElementById('monthPicker').value;
 
-  // ââ Leads calificadas
+  // ── Leads calificadas
   document.getElementById('leadsCount').textContent = S.leads.length;
   const leadsRows = S.leads.map(d => {
     const p   = d.properties;
     const sdr = p.sdr__que_agendo_;
-    const vol = p.promedio___volumen_operado_al_mes__detallado_ || 'â';
+    const vol = p.promedio___volumen_operado_al_mes__detallado_ || '—';
     const pts = N_MAP[vol] || 0;
-    const nl  = N_LABEL[vol] || 'â';
+    const nl  = N_LABEL[vol] || '—';
     const dt  = p.hs_v2_date_exited_965485717
-      ? p.hs_v2_date_exited_965485717.slice(0,10) : 'â';
-    const pip = PIPELINE_NAMES[p.pipeline] || p.pipeline || 'â';
+      ? p.hs_v2_date_exited_965485717.slice(0,10) : '—';
+    const pip = PIPELINE_NAMES[p.pipeline] || p.pipeline || '—';
     const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : null;
     return `<tr>
-      <td style="font-weight:600;">${p.dealname || 'â'}</td>
+      <td style="font-weight:600;">${p.dealname || '—'}</td>
       <td>${sdrName
         ? `<span class="badge badge-blue">${sdrName}</span>`
         : '<span class="no-sdr">Sin SDR</span>'}</td>
       <td style="font-size:11px;color:var(--text-muted);">${pip}</td>
       <td style="font-size:11px;">${dt}</td>
-      <td><span style="font-size:11px;">${vol !== 'â' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</span></td>
+      <td><span style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</span></td>
       <td>${pts > 0
-        ? `<strong style="color:#1D4ED8;">${nl} Â· ${pts}pt</strong>`
-        : '<span style="color:#9CA3AF;">â</span>'}</td>
+        ? `<strong style="color:#1D4ED8;">${nl} · ${pts}pt</strong>`
+        : '<span style="color:#9CA3AF;">—</span>'}</td>
     </tr>`;
   }).join('') || '<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
   document.getElementById('sabanaLeadsBody').innerHTML = leadsRows;
 
-  // ââ Nuevos clientes activados
+  // ── Nuevos clientes activados
   document.getElementById('activationsCount').textContent = S.activated.length;
   const actIds = new Set(S.kamExit.map(d => String(d.id)));
   const actRows = S.activated.map(d => {
     const p    = d.properties;
     const kam  = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
     const sdr  = p.sdr__que_agendo_;
-    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : 'â';
-    const vol  = p.promedio___volumen_operado_al_mes__detallado_ || 'â';
+    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : '—';
+    const vol  = p.promedio___volumen_operado_al_mes__detallado_ || '—';
     const pts  = N_MAP[vol] || 0;
-    const nl   = N_LABEL[vol] || 'â';
-    const fa   = p.fecha_activacion || 'â';
-    const src  = p.fuente_principal_de_lead || 'â';
+    const nl   = N_LABEL[vol] || '—';
+    const fa   = p.fecha_activacion || '—';
+    const src  = p.fuente_principal_de_lead || '—';
     const hasExit = actIds.has(String(d.id));
     const ctrl = hasExit
-      ? '<span style="color:#059669;font-weight:600;">â doble control</span>'
+      ? '<span style="color:#059669;font-weight:600;">✓ doble control</span>'
       : '<span style="color:#9CA3AF;font-size:11px;">solo fecha act.</span>';
     return `<tr>
-      <td style="font-weight:600;">${p.dealname || 'â'}</td>
+      <td style="font-weight:600;">${p.dealname || '—'}</td>
       <td><span class="badge badge-green">${kam}</span></td>
       <td style="font-size:11px;color:var(--text-muted);">${sdrName}</td>
       <td style="font-size:11px;color:var(--text-muted);">${src}</td>
       <td style="font-size:11px;">${fa}</td>
-      <td style="font-size:11px;">${vol !== 'â' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</td>
       <td>${pts > 0
-        ? `<strong style="color:#059669;">${nl} Â· ${pts}pt</strong>`
-        : '<span style="color:#9CA3AF;">â</span>'}</td>
+        ? `<strong style="color:#059669;">${nl} · ${pts}pt</strong>`
+        : '<span style="color:#9CA3AF;">—</span>'}</td>
       <td>${ctrl}</td>
     </tr>`;
   }).join('') || '<tr><td colspan="8" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
   document.getElementById('sabanaActBody').innerHTML = actRows;
 
-  // ââ Alertas doble control
+  // ── Alertas doble control
   if (C.alerts.length > 0) {
     document.getElementById('alertSection').style.display = '';
     document.getElementById('alertsCount').textContent = C.alerts.length;
@@ -843,10 +843,10 @@ function renderSabana() {
       const p   = d.properties;
       const kam = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
       const dt  = p.hs_v2_date_exited_29556535
-        ? p.hs_v2_date_exited_29556535.slice(0,10) : 'â';
-      const fa  = p.fecha_activacion || '<span style="color:#EF4444;">vacÃ­a</span>';
+        ? p.hs_v2_date_exited_29556535.slice(0,10) : '—';
+      const fa  = p.fecha_activacion || '<span style="color:#EF4444;">vacía</span>';
       return `<tr style="background:#FFFBEB;">
-        <td style="font-weight:600;">${p.dealname || 'â'}</td>
+        <td style="font-weight:600;">${p.dealname || '—'}</td>
         <td><span class="badge badge-amber">${kam}</span></td>
         <td style="font-size:11px;">${dt}</td>
         <td style="font-size:11px;">${fa}</td>
@@ -859,12 +859,12 @@ function renderSabana() {
   }
 
   document.getElementById('footer2').textContent =
-    'Ãltima actualizaciÃ³n: ' + new Date().toLocaleString('es');
+    'Última actualización: ' + new Date().toLocaleString('es');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 // HELPERS
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════════════
 function badge(p) {
   const lbl = pct(p);
   if (p >= 1)   return `<span class="badge badge-green">${lbl}</span>`;
@@ -892,7 +892,7 @@ function setLoading(show, msg) {
 function setError(msg) {
   const el = document.getElementById('errorBanner');
   if (msg) {
-    el.textContent = 'â ï¸ ' + msg;
+    el.textContent = '⚠️ ' + msg;
     el.className = 'error-banner show';
     document.getElementById('mainContent').style.display = 'block';
   } else {
