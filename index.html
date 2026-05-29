@@ -1363,7 +1363,7 @@ function renderAdminPayment() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <span style="font-size:11px;color:var(--text-muted);">El % Cumpl. es individual × peso + pod × peso.</span>
         <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;background:#F8FAFC;border:1px solid var(--border);border-radius:7px;padding:5px 10px;">
-          <input type="checkbox" id="bExtraToggle" onchange="toggleBExtraCol(this.checked)" style="cursor:pointer;">
+          <input type="checkbox" id="bExtraToggle" onchange="toggleBExtraCol(this.checked)" style="cursor:pointer;" ${showBExtra?"checked":""}>
           Mostrar Bono Extra
         </label>
       </div>
