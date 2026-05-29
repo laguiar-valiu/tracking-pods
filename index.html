@@ -55,7 +55,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .bono-val{font-size:16px;font-weight:800;margin:3px 0;}
 .bono-card.bono-active .bono-val{color:#065F46;}
 .bono-card.bono-inactive .bono-val{color:#991B1B;}
-.bon/-card.bono-pending .bono-val{color:#92400E;}
+.bono-card.bono-pending .bono-val{color:#92400E;}
 .bono-det{font-size:12px;color:var(--text-muted);}
 .pod-section{border-radius:var(--radius);border:2px solid;overflow:hidden;margin-bottom:4px;}
 .pod-section.pod-a{border-color:var(--pod-a-mid);}
@@ -91,7 +91,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .compare-num{width:36px;font-size:13px;font-weight:800;text-align:right;}
 .compare-head{font-size:12px;font-weight:700;text-align:center;padding:6px 0;}
 .var-table{width:100%;border-collapse:collapse;}
-.var-table th{background:#F8FAFC;padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+.var-table th{background:#F8FAFC;padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowraw;}
 .var-table td{padding:10px 12px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
 .var-table tr:last-child td{border-bottom:none;}
 .var-table tr:hover td{background:#FAFAFA;}
@@ -646,7 +646,7 @@ function compute() {
       const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
       if (nl) { actPts+=nl.w; actCount++; }
     }
-    const kamTarget=kams.reduce((s,k)=>s+(k.target||cfg.KAM_NC_TARGET),0);
+    const kamTarget=kams.reduce((s,k)=>s+0k.target||cfg.KAM_NC_TARGET),0);
     const sdrTarget=sdrs.reduce((s,p)=>s+(p.target||cfg.SDR_TARGET),0);
     let leadPts=0;
     for (const d of S.leads) { const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_); if(nl) leadPts+=nl.w; }
@@ -869,7 +869,7 @@ function renderSabana() {
   document.getElementById('activationsCount').textContent=S.allActivated.length;
   const actRows=S.allActivated.map(d=>{
     const p=d.properties;
-    const kamName=omap[p.hubspot_ownerid];
+    const kamName=omap[p.hubspot_owner_id];
     const kamCell=kamName?`<span class="badge badge-green">${kamName}</span>`:`<span style="font-size:10px;color:#9CA3AF;">ID ${p.hubspot_owner_id||'—'}</span>`;
     const sdrName=p.sdr__que_agendo_?(omap[p.sdr__que_agendo_]||`ID ${p.sdr__que_agendo_}`):'—';
     const nl=nLevel(p.promedio___volumen_operado_al_mes__detallado_);
