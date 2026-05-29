@@ -269,18 +269,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
         </table>
       </div>
     </div>
-    <div class="sabana-section hidden" id="alertSection">
-      <div class="sabana-title" style="color:#92400E;">
-        ⚠️ A resolver — salieron de "Cuenta sin activación" pero sin fecha correcta
-        <span class="sabana-count" id="alertsCount" style="background:#FEF3C7;color:#92400E;">0</span>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="sabana-table">
-          <thead><tr><th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th></tr></thead>
-          <tbody id="sabanaAlertBody"></tbody>
-        </table>
-      </div>
-    </div>
+
     <div class="footer" id="footer2"></div>
   </div>
 
@@ -422,14 +411,14 @@ function saveCA(key, val) {
 // ═══════════════════════════════════════════════
 // STATE & CONSTANTS
 // ═══════════════════════════════════════════════
-const S = { activated:[], leads:[], kamExit:[], allActivated:[] };
+const S = { activated:[], leads:[], kamExit:[], allActivated:[], owners:{} };
 let activeTab='dashboard', activeAdminTab='params';
 const PIPELINE_NAMES = { 'default':'Ventas','53531296':'Apertura de Cuentas','10153632':'Customer Success','656358057':'Prospección' };
 
 // ═══════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════
-function ownerMap(team) { const m={}; team.forEach(p=>{ if(p.oid) m[p.oid]=p.name; }); return m; }
+function ownerMap(team) { const m={}; team.forEach(p=>{ if(p.oid) m[p.oid]=p.name; }); Object.entries(S.owners).forEach(([id,n])=>{ if(!m[id]) m[id]=n; }); return m; }
 function dealLink(id, name, cfg) {
   const n = name||'—';
   if (!cfg.HUBSPOT_PORTAL_ID) return `<span style="font-weight:600;">${n}</span>`;
@@ -499,7 +488,7 @@ async function loadData() {
   const actProps=['dealname','hubspot_owner_id','sdr__que_agendo_','fecha_activacion',
                   'fuente_principal_de_lead','promedio___volumen_operado_al_mes__detallado_','pipeline'];
   try {
-    const [actRes,leadRes,exitRes]=await Promise.all([
+    const [actRes,leadRes,exitRes,ownersRes]=await Promise.all([
       callHS({ properties:actProps,
         filterGroups:[{filters:[
           {propertyName:'fecha_activacion',operator:'GTE',value:d1ms},
@@ -519,6 +508,7 @@ async function loadData() {
           {propertyName:'hs_v2_date_exited_29556535',operator:'GTE',value:d1ms},
           {propertyName:'hs_v2_date_exited_29556535',operator:'LT', value:d2ms},
         ]}], limit:200 }),
+      fetch('/api/hubspot?endpoint=owners').then(r=>r.json()).catch(()=>({results:[]})),
     ]);
 
     // Apply overrides
@@ -540,6 +530,10 @@ async function loadData() {
     S.activated=S.allActivated.filter(d=>kamOids.has(d.properties.hubspot_owner_id));
     S.leads=leadRes.results||[];
     S.kamExit=exitRes.results||[];
+    // Build owners map from HubSpot
+    (ownersRes.results||[]).forEach(o=>{
+      S.owners[String(o.id)]=(o.firstName||'')+(o.lastName?' '+o.lastName:'') || o.email || String(o.id);
+    });
 
     render(); renderSabana();
     if (isAdmin()) renderAdmin();
@@ -905,28 +899,8 @@ function renderSabana() {
   }).join('')||'<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos</td></tr>';
   document.getElementById('sabanaLeadsBody').innerHTML=leadsRows;
 
-  if (alerts.length>0) {
-    document.getElementById('alertSection').classList.remove('hidden');
-    document.getElementById('alertsCount').textContent=alerts.length;
-    const alertRows=alerts.map(d=>{
-      const p=d.properties;
-      const kam=omap[p.hubspot_owner_id]||`ID ${p.hubspot_owner_id}`;
-      const dt=p.hs_v2_date_exited_29556535?p.hs_v2_date_exited_29556535.slice(0,10):'—';
-      const fa=p.fecha_activacion||'—';
-      const esc=(s)=>s.replace(/'/g,"\\'").replace(/"/g,'&quot;');
-      const action=admin
-        ?`<button class="btn btn-sm btn-primary" onclick="openOverrideModal('${d.id}','${esc(p.dealname||'')}','${fa}')">Resolver →</button>`
-        :`<span style="color:#92400E;font-size:11px;font-weight:600;">Verificar en HubSpot</span>`;
-      return `<tr style="background:#FFFBEB;">
-        <td>${dealLink(d.id,p.dealname,cfg)}</td>
-        <td><span class="badge badge-amber">${kam}</span></td>
-        <td style="font-size:11px;">${dt}</td>
-        <td style="font-size:11px;">${fa}</td>
-        <td>${action}</td></tr>`;
-    }).join('');
-    document.getElementById('sabanaAlertBody').innerHTML=alertRows;
-  } else { document.getElementById('alertSection').classList.add('hidden'); }
-  document.getElementById('footer2').textContent='Última actualización: '+new Date().toLocaleString('es');
+  // Alerts rendered in Admin panel only
+    document.getElementById('footer2').textContent='Última actualización: '+new Date().toLocaleString('es');
 }
 
 // ═══════════════════════════════════════════════
@@ -974,7 +948,7 @@ function confirmOverride(dealId, dealName, fechaAct, discard) {
 // RENDER — ADMIN
 // ═══════════════════════════════════════════════
 function renderAdmin() {
-  renderAdminParams(); renderAdminTeam(); renderAdminOverrides(); renderAdminHos(); renderAdminPayment();
+  renderAdminParams(); renderAdminTeam(); renderAdminOverrides(); renderAdminAlerts(); renderAdminHos(); renderAdminPayment();
 }
 
 function renderAdminParams() {
@@ -1221,6 +1195,36 @@ function toggleBonoOvr(key,field,val) {
 function removeOverride(dealId) {
   const ovr=getOverrides(); delete ovr[String(dealId)]; saveOverrides(ovr);
   renderAdmin(); loadData();
+}
+
+function renderAdminAlerts() {
+  const C=compute(), {cfg,omap}=C;
+  const alerts=C.alerts||[];
+  const el=document.getElementById('adminAlerts');
+  if (!el) return;
+  if (!alerts.length) { el.innerHTML=''; return; }
+  const rows=alerts.map(d=>{
+    const p=d.properties;
+    const kam=omap[p.hubspot_owner_id]||S.owners[String(p.hubspot_owner_id)]||`ID ${p.hubspot_owner_id}`;
+    const dt=p.hs_v2_date_exited_29556535?p.hs_v2_date_exited_29556535.slice(0,10):'—';
+    const fa=p.fecha_activacion||'—';
+    const esc=(s)=>s.replace(/'/g,"\'").replace(/"/g,'&quot;');
+    return `<tr style="background:#FFFBEB;">
+      <td>${dealLink(d.id,p.dealname,cfg)}</td>
+      <td><span class="badge badge-amber">${kam}</span></td>
+      <td style="font-size:11px;">${dt}</td>
+      <td style="font-size:11px;">${fa}</td>
+      <td><button class="btn btn-sm btn-primary" onclick="openOverrideModal('${d.id}','${esc(p.dealname||'')}','${fa}')">Resolver →</button></td>
+    </tr>`;
+  }).join('');
+  el.innerHTML=`<div class="card" style="margin-bottom:16px;border-left:4px solid #F59E0B;">
+    <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:12px;">⚠️ A resolver (${alerts.length}) — salieron de "Cuenta sin activación" sin fecha correcta</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Estos deals requieren que asignes el mes correcto o los descartes.</p>
+    <div style="overflow-x:auto;"><table class="override-table">
+      <thead><tr><th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+  </div>`;
 }
 
 function renderAdminPayment() {
