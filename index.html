@@ -563,10 +563,11 @@ function compute() {
 
   // SDR stats from leads
   const sdrMap={};
-  sdrs.forEach(p=>sdrMap[p.oid]={n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0});
+  sdrs.forEach(p=>sdrMap[p.oid]={n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0,demos:0});
   for (const d of S.leads) {
     const oid=d.properties.sdr__que_agendo_;
     if (!sdrMap[oid]) continue;
+    sdrMap[oid].demos++;
     const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
     if (!nl) continue;
     sdrMap[oid][nl.n.toLowerCase()]++; sdrMap[oid].pts+=nl.w; sdrMap[oid].count++;
@@ -706,7 +707,8 @@ function renderPodCards(C) {
     const w=Math.min(pp*100,100).toFixed(0);
     return `<div class="person-card">
       <div class="person-name">${p.name}</div><div class="person-role">SDR · Pod ${p.pod}</div>
-      <div class="kpi-lbl"><span>Leads calificadas</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
+      <div class="kpi-lbl"><span>Demos agendadas</span><strong>${d.demos} demos</strong></div>
+      <div class="kpi-lbl" style="margin-top:4px;"><span>Leads con vol.</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
       <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${col}"></div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;">
         ${badge(pp)}
