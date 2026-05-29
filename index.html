@@ -421,14 +421,25 @@ function saveCA(key, val) {
 // ═══════════════════════════════════════════════
 // STATE & CONSTANTS
 // ═══════════════════════════════════════════════
-const S = { activated:[], leads:[], kamExit:[], allActivated:[], owners:{} };
+// Known owners from HubSpot (fallback if API fetch fails)
+const KNOWN_OWNERS = {
+  '230647620':'José Schinocca',
+  '1498352325':'Camila Gilardenghi',
+  '729221560':'María Acosta',
+  '91653845':'Andrea Denise Blas',
+  '90253953':'Carlos Morelli',
+  '77904392':'Yamila Kerbel',
+  '2104711324':'Rocío Coronel',
+  '209899615':'Agustín Rossi',
+};
+const S = { activated:[], leads:[], kamExit:[], allActivated:[], owners:{...KNOWN_OWNERS} };
 let activeTab='dashboard', activeAdminTab='params';
 const PIPELINE_NAMES = { 'default':'Ventas','53531296':'Apertura de Cuentas','10153632':'Customer Success','656358057':'Prospección' };
 
 // ═══════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════
-function ownerMap(team) { const m={}; team.forEach(p=>{ if(p.oid) m[p.oid]=p.name; }); Object.entries(S.owners).forEach(([id,n])=>{ if(!m[id]) m[id]=n; }); return m; }
+function ownerMap(team) { const m={}; Object.entries(KNOWN_OWNERS).forEach(([id,n])=>m[id]=n); Object.entries(S.owners).forEach(([id,n])=>{ if(n) m[id]=n; }); team.forEach(p=>{ if(p.oid) m[p.oid]=p.name; }); return m; }
 function dealLink(id, name, cfg) {
   const n = name||'—';
   if (!cfg.HUBSPOT_PORTAL_ID) return `<span style="font-weight:600;">${n}</span>`;
