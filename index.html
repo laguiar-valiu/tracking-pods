@@ -5,23 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tracking Incentivos Comerciales · Valiu</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 :root {
-  --pod-a:#3B82F6; --pod-a-light:#EFF6FF; --pod-a-mid:#BFDBFE;
-  --pod-b:#8B5CF6; --pod-b-light:#F5F3FF; --pod-b-mid:#DDD6FE;
+  --pod-a:#0086FF; --pod-a-light:#E6F2FF; --pod-a-mid:#99CCFF;
+  --pod-b:#7C3AED; --pod-b-light:#F5F3FF; --pod-b-mid:#DDD6FE;
   --success:#10B981; --warning:#F59E0B; --danger:#EF4444;
-  --text:#111827; --text-muted:#6B7280; --bg:#F1F5F9;
+  --text:#111827; --text-muted:#6B7280; --bg:#F0F4F8;
   --card:#FFFFFF; --border:#E5E7EB; --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
-.header{background:#0F172A;color:white;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:10;}
-.header-title{font-size:17px;font-weight:700;letter-spacing:-.3px;}
+body{font-family:'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+.header{background:#151522;color:white;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:10;}
+.header-logo{display:flex;align-items:center;gap:12px;}
+.header-logo-divider{width:1px;height:22px;background:rgba(255,255,255,0.2);}
+.header-title{font-size:15px;font-weight:700;letter-spacing:-.2px;}
 .header-sub{font-size:11px;color:#94A3B8;margin-top:2px;}
 .header-controls{display:flex;align-items:center;gap:8px;}
 input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padding:6px 10px;border-radius:8px;font-size:13px;cursor:pointer;}
 .btn{border:none;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
 .btn:hover{opacity:.82;}
-.btn-primary{background:#3B82F6;color:white;}
+.btn-primary{background:#0086FF;color:white;}
 .btn-ghost{background:#1E293B;color:#94A3B8;border:1px solid #334155;}
 .btn-ghost:hover{color:white;}
 .btn-sm{padding:4px 10px;font-size:12px;}
@@ -30,11 +33,11 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .tabs{background:#1E293B;padding:0 24px;display:flex;gap:4px;}
 .tab-btn{background:none;border:none;color:#94A3B8;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
 .tab-btn:hover{color:white;}
-.tab-btn.active{color:white;border-bottom-color:#3B82F6;}
+.tab-btn.active{color:white;border-bottom-color:#0086FF;}
 .tab-btn.admin-tab.active{border-bottom-color:#F59E0B;color:#F59E0B;}
 .hidden{display:none!important;}
 .loading-overlay{position:fixed;inset:0;background:rgba(248,250,252,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:100;}
-.spinner{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#3B82F6;border-radius:50%;animation:spin .7s linear infinite;}
+.spinner{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#0086FF;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{color:#475569;font-size:13px;}
 .main{padding:20px 24px;max-width:1380px;margin:0 auto;}
@@ -133,7 +136,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .team-input{width:100%;padding:4px 7px;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;}
 .team-input:focus{outline:none;border-color:#3B82F6;}
 .payment-table{width:100%;border-collapse:collapse;}
-.payment-table th{background:#0F172A;color:white;padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
+.payment-table th{background:#151522;color:white;padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
 .payment-table td{padding:10px 12px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
 .payment-table tr:last-child td{border-bottom:none;}
 .payment-table tr:hover td{background:#FAFAFA;}
@@ -142,7 +145,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .override-table th{background:#F8FAFC;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:2px solid var(--border);text-align:left;}
 .override-table td{padding:9px 10px;border-bottom:1px solid #F3F4F6;font-size:12px;vertical-align:middle;}
 .ca-input{width:70px;padding:4px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:13px;text-align:center;}
-.ca-input:focus{outline:none;border-color:#F59E0B;}
+.ca-input:focus{outline:none;border-color:#0086FF;}
 .hos-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .footer{font-size:11px;color:#94A3B8;text-align:center;padding:16px;}
 @media(max-width:900px){
@@ -182,9 +185,13 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 
 <!-- Header -->
 <div class="header">
-  <div>
-    <div class="header-title">📊 Tracking Incentivos Comerciales</div>
-    <div class="header-sub" id="headerSub">Valiu · cargando…</div>
+  <div class="header-logo">
+    <img src="https://valiu.com/image/logo_valiu.svg" style="height:20px;filter:brightness(0) invert(1);" alt="Valiu" onerror="this.style.display='none'">
+    <div class="header-logo-divider"></div>
+    <div>
+      <div class="header-title">Tracking Incentivos Comerciales</div>
+      <div class="header-sub" id="headerSub">Valiu · cargando…</div>
+    </div>
   </div>
   <div class="header-controls">
     <input type="month" id="monthPicker">
@@ -724,9 +731,14 @@ function renderPodCards(C) {
       <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
       <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${col}"></div></div>
       <div class="sep"></div>
-      <div class="kpi-lbl"><span>% Cartera activa</span><span style="color:#6B7280;font-size:10px;">${caVal!==null?caVal+'%':'—'}</span></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
-        ${caPct!==null?badge(caPct):'<span style="font-size:10px;color:#9CA3AF;">ingresá % en Admin</span>'}
+      <div class="kpi-lbl"><span>% Cartera activa</span>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <input class="ca-input" type="number" min="0" max="200" step="1" placeholder="%" value="${caVal!==null?caVal:''}" oninput="saveCA('${p.key}',this.value)" style="width:56px;padding:3px 6px;font-size:11px;">
+          <span style="font-size:10px;color:#9CA3AF;">%</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        ${caPct!==null?badge(caPct):'<span style="font-size:10px;color:#9CA3AF;">ingresá %</span>'}
         <div class="n-row">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>
       </div></div>`;
   }
@@ -1251,52 +1263,41 @@ function renderAdminPayment() {
       </div>
     </div>`).join('');
 
-  // Payment rows
+  // Payment rows (new column structure)
+  const showBExtra=isBExtraVisible();
+  function makeRow(name,rolLabel,rolStyle,indiv,pod,combined,bEq,bComp,finalPct,meetsFloor,varSalary,bonoExtra,rowStyle='') {
+    const cumpl=combined;
+    const fc=finalPct>=1?'#059669':finalPct>=0.5?'#D97706':'#DC2626';
+    const earned=meetsFloor?varSalary*finalPct:0;
+    const total=earned+(showBExtra?(bonoExtra||0):0);
+    const bEqCol=bEq>0?`<span style="color:#059669;font-weight:700;">+${pct(bEq)}</span>`:'<span style="color:#9CA3AF;">—</span>';
+    const bCompCol=bComp>0?`<span style="color:#0086FF;font-weight:700;">+${pct(bComp)}</span>`:'<span style="color:#9CA3AF;">—</span>';
+    const bExtraCol=showBExtra?`<td style="color:#374151;font-weight:600;">${bonoExtra>0?money(bonoExtra):'—'}</td>`:'';
+    return `<tr${rowStyle?` style="${rowStyle}"`:''}><td><strong>${name}</strong></td>
+      <td><span style="${rolStyle}">${rolLabel}</span></td>
+      <td>${colorPct(indiv)}</td><td>${pod!==null?colorPct(pod):'<span style="color:#9CA3AF;font-size:11px;">—</span>'}</td>
+      <td>${colorPct(cumpl)}</td>
+      <td>${bEqCol}</td><td>${bCompCol}</td>
+      <td class="pct-big" style="color:${fc}">${pct(finalPct)}</td>
+      ${bExtraCol}
+      <td class="money-big" style="color:${total>0?'#059669':'#DC2626'};">${money(total)}</td>
+    </tr>`;
+  }
   const rows=active.map(p=>{
     const f=personFinal(p);
-    const earned=f.meetsFloor?p.varSalary*f.finalPct:0;
-    const total=earned+(p.bonoExtra||0);
-    const fc=f.finalPct>=1?'#059669':f.finalPct>=0.5?'#D97706':'#DC2626';
-    return `<tr>
-      <td><strong>${p.name}</strong></td>
-      <td><span style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;">${p.role}</span></td>
-      <td>${colorPct(f.indivPct)}</td><td>${colorPct(f.podPct)}</td>
-      <td class="pct-big" style="color:${fc}">${pct(f.finalPct)}</td>
-      <td>${f.meetsFloor?'✅':'<span title="Bajo el piso">❌ '+pct(f.combined)+'</span>'}</td>
-      <td style="font-weight:600;">${money(p.varSalary)}</td>
-      <td class="money-big" style="color:${earned>0?'#059669':'#DC2626'};">${money(earned)}</td>
-      <td style="color:#374151;font-weight:600;">${p.bonoExtra>0?money(p.bonoExtra):'—'}</td>
-      <td class="money-big" style="color:#059669;">${money(total)}</td>
-    </tr>`;
+    const rolStyle='font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;';
+    return makeRow(p.name,p.role,rolStyle,f.indivPct,f.podPct,f.combined,f.bEq,f.bComp,f.finalPct,f.meetsFloor,p.varSalary,p.bonoExtra||0);
   });
-
   if (h&&hos) {
-    const earned=h.meetsFloor?hos.varSalary*h.finalPct:0;
-    const total=earned+(hos.bonoExtra||0);
-    const fc=h.finalPct>=1?'#059669':h.finalPct>=0.5?'#D97706':'#DC2626';
-    rows.push(`<tr style="background:#F0FDF4;">
-      <td><strong>${hos.name}</strong></td>
-      <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:4px;">HOS</span></td>
-      <td>${colorPct(h.indivPct)}</td><td><span style="color:#9CA3AF;font-size:11px;">—</span></td>
-      <td class="pct-big" style="color:${fc}">${pct(h.finalPct)}</td>
-      <td>${h.meetsFloor?'✅':'❌ '+pct(h.indivPct)}</td>
-      <td style="font-weight:600;">${money(hos.varSalary)}</td>
-      <td class="money-big" style="color:${earned>0?'#059669':'#DC2626'};">${money(earned)}</td>
-      <td style="color:#374151;font-weight:600;">${hos.bonoExtra>0?money(hos.bonoExtra):'—'}</td>
-      <td class="money-big" style="color:#059669;">${money(total)}</td>
-    </tr>`);
+    rows.push(makeRow(hos.name,'HOS','font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:4px;',
+      h.indivPct,null,h.indivPct,h.bEq||0,0,h.finalPct,h.meetsFloor,hos.varSalary,hos.bonoExtra||0,'background:#F0FDF4'));
   }
-
   let totalNomina=0;
-  active.forEach(p=>{ const f=personFinal(p); totalNomina+=(f.meetsFloor?p.varSalary*f.finalPct:0)+(p.bonoExtra||0); });
-  if (h&&hos) totalNomina+=(h.meetsFloor?hos.varSalary*h.finalPct:0)+(hos.bonoExtra||0);
+  active.forEach(p=>{ const f=personFinal(p); totalNomina+=(f.meetsFloor?p.varSalary*f.finalPct:0)+(showBExtra?p.bonoExtra||0:0); });
+  if (h&&hos) totalNomina+=(h.meetsFloor?hos.varSalary*h.finalPct:0)+(showBExtra?hos.bonoExtra||0:0);
 
   document.getElementById('adminPayment').innerHTML=`
-    <div class="card" style="margin-bottom:16px;">
-      <div class="param-group-title" style="margin-bottom:12px;">\u{1F4CA} Inputs — % Cartera activa (KAMs)</div>
-      <div style="font-size:11px;color:#9CA3AF;margin-bottom:8px;">El % CA del HoS se ingresa en la pestaña "Mi desempeño".</div>
-      ${caInputs||'<p style="color:#9CA3AF;font-size:12px;">No hay KAMs activos en el equipo.</p>'}
-    </div>
+
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
         <span style="font-size:14px;font-weight:700;">\u{1F4B0} Cierre de mes — ${mesLabel}</span>
@@ -1306,14 +1307,15 @@ function renderAdminPayment() {
         <table class="payment-table">
           <thead><tr>
             <th>Nombre</th><th>Rol</th><th>Individual</th><th>Pod</th>
-            <th>% Final</th><th>Piso</th>
-            <th>Salario var.</th><th>$ Variable</th><th>Bono extra</th><th>TOTAL</th>
+            <th>% Cumpl.</th><th>B. Equipo</th><th>B. Comp.</th><th>% Final</th>
+            ${showBExtra?'<th><label style="cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:600;"><input type="checkbox" checked onchange="toggleBExtraCol(this.checked)"> Bono extra</label></th>':'<th style="width:32px;padding:4px;text-align:center;" title="Activar bono extra"><label style="cursor:pointer;"><input type="checkbox" onchange="toggleBExtraCol(this.checked)"> B.Extra</label></th>'}
+            <th>TOTAL</th>
           </tr></thead>
           <tbody>${rows.join('')}</tbody>
         </table>
       </div>
       <div style="margin-top:12px;font-size:11px;color:#9CA3AF;">
-        Los salarios variables y bonos extra son editables en la pestaña Equipo. La columna Piso muestra el % combinado cuando no se alcanza el mínimo.
+        El % Cumpl. es individual × peso + pod × peso. Los bonos aplican cuando % Cumpl. ≥ piso (30%), salvo que estén forzados en Overrides. Activá la columna B.Extra cuando corresponda.
       </div>
     </div>`;
 }
@@ -1321,6 +1323,11 @@ function renderAdminPayment() {
 // ═══════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════
+function isBExtraVisible() { return localStorage.getItem('v2_bono_extra_show')==='true'; }
+function toggleBExtraCol(checked) {
+  localStorage.setItem('v2_bono_extra_show', checked?'true':'false');
+  if(S.allActivated.length||S.leads.length){render();renderSabana();if(isAdmin())renderAdmin();}
+}
 function setLoading(show,msg) {
   document.getElementById('loadingOverlay').classList.toggle('hidden',!show);
   if (msg) document.getElementById('loadingText').textContent=msg;
