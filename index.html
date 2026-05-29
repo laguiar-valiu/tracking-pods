@@ -91,7 +91,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 .compare-num{width:36px;font-size:13px;font-weight:800;text-align:right;}
 .compare-head{font-size:12px;font-weight:700;text-align:center;padding:6px 0;}
 .var-table{width:100%;border-collapse:collapse;}
-.var-table th{background:#F8FAFC;padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowraw;}
+.var-table th{background:#F8FAFC;padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap;}
 .var-table td{padding:10px 12px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
 .var-table tr:last-child td{border-bottom:none;}
 .var-table tr:hover td{background:#FAFAFA;}
@@ -393,7 +393,7 @@ async function submitPin() {
 }
 function refreshAdminUI() {
   const admin = isAdmin();
-  document.getElementById('adminBtn').textContent = admin?'🔓':'🔒';
+  document.getElementById('adminBtn').textContent = admin?'\u{1F513}':'\u{1F512}';
   document.getElementById('tab-admin').classList.toggle('hidden', !admin);
   // hosSection removed from dashboard
   if (!admin && activeTab==='admin') switchTab('dashboard');
@@ -646,7 +646,7 @@ function compute() {
       const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
       if (nl) { actPts+=nl.w; actCount++; }
     }
-    const kamTarget=kams.reduce((s,k)=>s+0k.target||cfg.KAM_NC_TARGET),0);
+    const kamTarget=kams.reduce((s,k)=>s+(k.target||cfg.KAM_NC_TARGET),0);
     const sdrTarget=sdrs.reduce((s,p)=>s+(p.target||cfg.SDR_TARGET),0);
     let leadPts=0;
     for (const d of S.leads) { const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_); if(nl) leadPts+=nl.w; }
@@ -811,7 +811,7 @@ function renderAdminHos() {
   </div>`;
   document.getElementById('adminHos').innerHTML=`
     <div class="card">
-      <div style="font-size:13px;font-weight:700;margin-bottom:16px;">👤 Head of Sales — Mi desempeño</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:16px;">\u{1F464} Head of Sales — Mi desempeño</div>
       ${caInputs}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div>
@@ -941,7 +941,7 @@ function openOverrideModal(dealId, dealName, fechaAct) {
     opts.push(`<option value="${val}"${val===mv?' selected':''}>${lbl}</option>`);
   }
   document.getElementById('overrideModalContent').innerHTML=`
-    <div class="modal-title">📅 Resolver deal</div>
+    <div class="modal-title">\u{1F4C5} Resolver deal</div>
     <p style="font-size:13px;font-weight:600;margin-bottom:6px;">${dealName}</p>
     <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Fecha activación original: ${fechaAct}</p>
     <div style="margin-bottom:16px;">
@@ -996,7 +996,7 @@ function renderAdminParams() {
       <div style="font-size:13px;font-weight:700;margin-bottom:16px;">⚙️ Parámetros del sistema</div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
-        ${sectionHdr('🎯 Targets individuales')}
+        ${sectionHdr('\u{1F3AF} Targets individuales')}
         <div class="param-group">
           <div class="param-group-title">SDR — Target</div>
           ${nRow('Puntos N-ponderados','SDR_TARGET',0.5,'pts')}
@@ -1014,7 +1014,7 @@ function renderAdminParams() {
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
-        ${sectionHdr('🏅 Bonos del equipo')}
+        ${sectionHdr('\u{1F3C5} Bonos del equipo')}
         <div class="param-group">
           <div class="param-group-title">Bono Equipo</div>
           ${nRow('Activaciones mínimas','BONO_EQ_MIN',1,'cuentas')}
@@ -1035,7 +1035,7 @@ function renderAdminParams() {
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
-        ${sectionHdr('👤 Head of Sales — Esquema de incentivos')}
+        ${sectionHdr('\u{1F464} Head of Sales — Esquema de incentivos')}
         <div class="param-group">
           <div class="param-group-title">Pesos de métricas</div>
           ${nRow('Activaciones N-ponderadas','HOS_ACT_PTS_W',1,'%')}
@@ -1059,7 +1059,7 @@ function renderAdminParams() {
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-        ${sectionHdr('🔧 Sistema')}
+        ${sectionHdr('\u{1F527} Sistema')}
         <div class="param-group">
           <div class="param-group-title">HubSpot</div>
           <div class="param-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
@@ -1123,7 +1123,7 @@ function renderAdminTeam() {
   document.getElementById('adminTeam').innerHTML=`
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <span style="font-size:13px;font-weight:700;">👥 Configuración del equipo</span>
+        <span style="font-size:13px;font-weight:700;">\u{1F465} Configuración del equipo</span>
         <button class="btn btn-success btn-sm" onclick="addTeamMember()">+ Añadir miembro</button>
       </div>
       <div style="overflow-x:auto;">
@@ -1196,7 +1196,7 @@ function renderAdminOverrides() {
   </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:#9CA3AF;padding:16px;">Sin overrides registrados</td></tr>';
   document.getElementById('adminOverrides').innerHTML=`
     <div class="card" style="margin-bottom:16px;">
-      <div style="font-size:13px;font-weight:700;margin-bottom:6px;">🎯 Overrides de bonos por persona</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px;">\u{1F3AF} Overrides de bonos por persona</div>
       <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Forzá bonos o el piso de pago de forma unilateral para casos excepcionales. Hover sobre cada checkbox para ver qué hace.</p>
       <table class="override-table">
         <thead><tr><th>Nombre</th><th>Rol</th><th>Forzar bono equipo</th><th>Forzar bono comp.</th><th>Forzar pago (ignorar piso)</th><th>HoS: forzar bono eq.</th></tr></thead>
@@ -1204,7 +1204,7 @@ function renderAdminOverrides() {
       </table>
     </div>
     <div class="card">
-      <div style="font-size:13px;font-weight:700;margin-bottom:12px;">📅 Historial de deals reasignados / descartados</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;">\u{1F4C5} Historial de deals reasignados / descartados</div>
       <table class="override-table">
         <thead><tr><th>Deal</th><th>Fecha act. original</th><th>Mes asignado</th><th>Fecha resolución</th><th></th></tr></thead>
         <tbody>${dealRows}</tbody>
@@ -1284,13 +1284,13 @@ function renderAdminPayment() {
 
   document.getElementById('adminPayment').innerHTML=`
     <div class="card" style="margin-bottom:16px;">
-      <div class="param-group-title" style="margin-bottom:12px;">📊 Inputs — % Cartera activa (KAMs)</div>
+      <div class="param-group-title" style="margin-bottom:12px;">\u{1F4CA} Inputs — % Cartera activa (KAMs)</div>
       <div style="font-size:11px;color:#9CA3AF;margin-bottom:8px;">El % CA del HoS se ingresa en la pestaña "Mi desempeño".</div>
       ${caInputs||'<p style="color:#9CA3AF;font-size:12px;">No hay KAMs activos en el equipo.</p>'}
     </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-        <span style="font-size:14px;font-weight:700;">💰 Cierre de mes — ${mesLabel}</span>
+        <span style="font-size:14px;font-weight:700;">\u{1F4B0} Cierre de mes — ${mesLabel}</span>
         <span style="font-size:13px;color:var(--text-muted);">Nómina variable total: <strong style="color:#059669;font-size:16px;">${money(totalNomina)}</strong></span>
       </div>
       <div style="overflow-x:auto;">
