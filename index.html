@@ -3,902 +3,1334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tracking 2.0 — Pods Comerciales · Valiu</title>
+<title>Tracking Incentivos Comerciales · Valiu</title>
 <style>
 :root {
-  color-scheme: light;
-  --pod-a:       #3B82F6;
-  --pod-a-light: #EFF6FF;
-  --pod-a-mid:   #BFDBFE;
-  --pod-b:       #8B5CF6;
-  --pod-b-light: #F5F3FF;
-  --pod-b-mid:   #DDD6FE;
-  --success:     #10B981;
-  --warning:     #F59E0B;
-  --danger:      #EF4444;
-  --text:        #111827;
-  --text-muted:  #6B7280;
-  --bg:          #F1F5F9;
-  --card:        #FFFFFF;
-  --border:      #E5E7EB;
-  --radius:      12px;
+  --pod-a:#3B82F6; --pod-a-light:#EFF6FF; --pod-a-mid:#BFDBFE;
+  --pod-b:#8B5CF6; --pod-b-light:#F5F3FF; --pod-b-mid:#DDD6FE;
+  --success:#10B981; --warning:#F59E0B; --danger:#EF4444;
+  --text:#111827; --text-muted:#6B7280; --bg:#F1F5F9;
+  --card:#FFFFFF; --border:#E5E7EB; --radius:12px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
-
-/* ── Header ── */
-.header { background: #0F172A; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 10; }
-.header-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px; }
-.header-sub { font-size: 11px; color: #94A3B8; margin-top: 2px; }
-.header-controls { display: flex; align-items: center; gap: 10px; }
-input[type="month"] { border: 1px solid #475569; background: #1E293B; color: white; padding: 6px 10px; border-radius: 8px; font-size: 13px; cursor: pointer; }
-.btn { border: none; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
-.btn:hover { opacity: .82; }
-.btn-primary { background: #3B82F6; color: white; }
-
-/* ── Tabs ── */
-.tabs { background: #1E293B; padding: 0 24px; display: flex; gap: 4px; }
-.tab-btn { background: none; border: none; color: #94A3B8; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; }
-.tab-btn:hover { color: white; }
-.tab-btn.active { color: white; border-bottom-color: #3B82F6; }
-
-/* ── Loading ── */
-.loading-overlay { position: fixed; inset: 0; background: rgba(248,250,252,.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 100; }
-.spinner { width: 36px; height: 36px; border: 3px solid #E2E8F0; border-top-color: #3B82F6; border-radius: 50%; animation: spin .7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-overlay.hidden { display: none; }
-.loading-text { color: #475569; font-size: 13px; }
-
-/* ── Layout ── */
-.main { padding: 20px 24px; max-width: 1380px; margin: 0 auto; }
-.section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 20px 0 10px; }
-.section-title:first-child { margin-top: 0; }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-/* ── Error ── */
-.error-banner { background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: var(--radius); margin-bottom: 14px; display: none; font-size: 13px; }
-.error-banner.show { display: block; }
-
-/* ── Alert banner ── */
-.alert-banner { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 14px; font-size: 12px; display: none; }
-.alert-banner.show { display: block; }
-
-/* ── Bono cards ── */
-.bono-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
-.bono-card { border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: flex-start; gap: 14px; border: 1px solid; }
-.bono-card.bono-pending  { background: #FFFBEB; border-color: #FDE68A; }
-.bono-card.bono-active   { background: #ECFDF5; border-color: #6EE7B7; }
-.bono-card.bono-inactive { background: #FEF2F2; border-color: #FCA5A5; }
-.bono-icon { font-size: 26px; margin-top: 2px; }
-.bono-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
-.bono-val { font-size: 16px; font-weight: 800; margin: 3px 0; }
-.bono-card.bono-active   .bono-val { color: #065F46; }
-.bono-card.bono-inactive .bono-val { color: #991B1B; }
-.bono-card.bono-pending  .bono-val { color: #92400E; }
-.bono-det { font-size: 12px; color: var(--text-muted); }
-
-/* ── Pod sections ── */
-.pod-section { border-radius: var(--radius); border: 2px solid; overflow: hidden; }
-.pod-section.pod-a { border-color: var(--pod-a-mid); }
-.pod-section.pod-b { border-color: var(--pod-b-mid); }
-.pod-header { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 15px; }
-.pod-section.pod-a .pod-header { background: var(--pod-a); color: white; }
-.pod-section.pod-b .pod-header { background: var(--pod-b); color: white; }
-.pod-sub { font-size: 12px; font-weight: 400; opacity: .85; }
-.pod-body { background: white; display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 12px; }
-
-/* ── Person card ── */
-.person-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
-.person-name { font-weight: 700; font-size: 14px; }
-.person-role { font-size: 11px; color: var(--text-muted); margin: 2px 0 10px; }
-.kpi-lbl { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 4px; }
-.kpi-lbl strong { color: var(--text); }
-.kpi-track { height: 7px; background: #E2E8F0; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
-.kpi-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
-.n-row { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 6px; }
-.n-pill { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #F3F4F6; color: #6B7280; }
-.n-pill.hit { background: #DBEAFE; color: #1D4ED8; }
-.sep { border-top: 1px solid var(--border); margin: 8px 0; }
-.manual-input { border: 1px dashed #D1D5DB; background: #FEFCE8; padding: 3px 7px; border-radius: 6px; width: 60px; font-size: 13px; text-align: center; }
-.manual-input:focus { outline: none; border-color: #F59E0B; background: #FFFBEB; }
-
-/* ── Badge ── */
-.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.badge-green  { background: #D1FAE5; color: #065F46; }
-.badge-amber  { background: #FEF3C7; color: #92400E; }
-.badge-red    { background: #FEE2E2; color: #991B1B; }
-.badge-blue   { background: #DBEAFE; color: #1E40AF; }
-.badge-gray   { background: #F3F4F6; color: #6B7280; }
-
-/* ── Pod compare ── */
-.compare-grid { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid #F3F4F6; }
-.compare-grid:last-child { border-bottom: none; }
-.compare-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-.compare-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.compare-track { flex: 1; height: 10px; background: #E2E8F0; border-radius: 5px; overflow: hidden; }
-.compare-fill  { height: 100%; border-radius: 5px; }
-.compare-num { width: 30px; font-size: 13px; font-weight: 800; text-align: right; }
-.compare-head { font-size: 12px; font-weight: 700; text-align: center; padding: 6px 0; }
-
-/* ── Variable table ── */
-.var-table { width: 100%; border-collapse: collapse; }
-.var-table th { background: #F8FAFC; padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
-.var-table td { padding: 10px 12px; border-bottom: 1px solid #F3F4F6; font-size: 13px; vertical-align: middle; }
-.var-table tr:last-child td { border-bottom: none; }
-.var-table tr:hover td { background: #FAFAFA; }
-.pct-big { font-size: 15px; font-weight: 800; }
-
-/* ── Sábana ── */
-.sabana-section { margin-bottom: 28px; }
-.sabana-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.sabana-count { font-size: 11px; font-weight: 600; background: #E0F2FE; color: #0369A1; padding: 2px 8px; border-radius: 20px; }
-.sabana-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.sabana-table th { background: #F8FAFC; padding: 7px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); border-bottom: 2px solid var(--border); white-space: nowrap; }
-.sabana-table td { padding: 8px 10px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
-.sabana-table tr:last-child td { border-bottom: none; }
-.sabana-table tr:hover td { background: #FAFAFA; }
-.no-sdr { font-size: 10px; font-weight: 600; background: #FEF3C7; color: #92400E; padding: 1px 6px; border-radius: 4px; }
-.alert-flag { font-size: 11px; }
-
-/* ── Footer ── */
-.footer { font-size: 11px; color: #94A3B8; text-align: center; padding: 16px; }
-
-@media (max-width: 900px) {
-  .grid-2, .bono-wrap { grid-template-columns: 1fr; }
-  .pod-body { grid-template-columns: 1fr; }
-  .compare-grid { grid-template-columns: 70px 1fr 1fr; }
-  .sabana-table { font-size: 11px; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+.header{background:#0F172A;color:white;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:10;}
+.header-title{font-size:17px;font-weight:700;letter-spacing:-.3px;}
+.header-sub{font-size:11px;color:#94A3B8;margin-top:2px;}
+.header-controls{display:flex;align-items:center;gap:8px;}
+input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padding:6px 10px;border-radius:8px;font-size:13px;cursor:pointer;}
+.btn{border:none;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.btn:hover{opacity:.82;}
+.btn-primary{background:#3B82F6;color:white;}
+.btn-ghost{background:#1E293B;color:#94A3B8;border:1px solid #334155;}
+.btn-ghost:hover{color:white;}
+.btn-sm{padding:4px 10px;font-size:12px;}
+.btn-danger{background:#EF4444;color:white;}
+.btn-success{background:#10B981;color:white;}
+.tabs{background:#1E293B;padding:0 24px;display:flex;gap:4px;}
+.tab-btn{background:none;border:none;color:#94A3B8;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab-btn:hover{color:white;}
+.tab-btn.active{color:white;border-bottom-color:#3B82F6;}
+.tab-btn.admin-tab.active{border-bottom-color:#F59E0B;color:#F59E0B;}
+.hidden{display:none!important;}
+.loading-overlay{position:fixed;inset:0;background:rgba(248,250,252,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:100;}
+.spinner{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#3B82F6;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{color:#475569;font-size:13px;}
+.main{padding:20px 24px;max-width:1380px;margin:0 auto;}
+.section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin:20px 0 10px;}
+.section-title:first-child{margin-top:0;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.error-banner{background:#FEF2F2;border:1px solid #FCA5A5;color:#991B1B;padding:12px 16px;border-radius:var(--radius);margin-bottom:14px;display:none;font-size:13px;}
+.error-banner.show{display:block;}
+.alert-banner{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;padding:10px 14px;border-radius:var(--radius);margin-bottom:14px;font-size:12px;display:none;}
+.alert-banner.show{display:block;}
+.bono-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+.bono-card{border-radius:var(--radius);padding:14px 18px;display:flex;align-items:flex-start;gap:14px;border:1px solid;}
+.bono-card.bono-pending{background:#FFFBEB;border-color:#FDE68A;}
+.bono-card.bono-active{background:#ECFDF5;border-color:#6EE7B7;}
+.bono-card.bono-inactive{background:#FEF2F2;border-color:#FCA5A5;}
+.bono-icon{font-size:26px;margin-top:2px;}
+.bono-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.bono-val{font-size:16px;font-weight:800;margin:3px 0;}
+.bono-card.bono-active .bono-val{color:#065F46;}
+.bono-card.bono-inactive .bono-val{color:#991B1B;}
+.bon/-card.bono-pending .bono-val{color:#92400E;}
+.bono-det{font-size:12px;color:var(--text-muted);}
+.pod-section{border-radius:var(--radius);border:2px solid;overflow:hidden;margin-bottom:4px;}
+.pod-section.pod-a{border-color:var(--pod-a-mid);}
+.pod-section.pod-b{border-color:var(--pod-b-mid);}
+.pod-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px;}
+.pod-section.pod-a .pod-header{background:var(--pod-a);color:white;}
+.pod-section.pod-b .pod-header{background:var(--pod-b);color:white;}
+.pod-sub{font-size:12px;font-weight:400;opacity:.85;}
+.pod-body{background:white;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px;}
+.person-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;}
+.person-name{font-weight:700;font-size:14px;}
+.person-role{font-size:11px;color:var(--text-muted);margin:2px 0 10px;}
+.kpi-lbl{font-size:11px;color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:4px;}
+.kpi-lbl strong{color:var(--text);}
+.kpi-track{height:7px;background:#E2E8F0;border-radius:4px;overflow:hidden;margin-bottom:6px;}
+.kpi-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+.n-row{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px;}
+.n-pill{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:#F3F4F6;color:#6B7280;}
+.n-pill.hit{background:#DBEAFE;color:#1D4ED8;}
+.sep{border-top:1px solid var(--border);margin:8px 0;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-green{background:#D1FAE5;color:#065F46;}
+.badge-amber{background:#FEF3C7;color:#92400E;}
+.badge-red{background:#FEE2E2;color:#991B1B;}
+.badge-blue{background:#DBEAFE;color:#1E40AF;}
+.badge-gray{background:#F3F4F6;color:#6B7280;}
+.compare-grid{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #F3F4F6;}
+.compare-grid:last-child{border-bottom:none;}
+.compare-lbl{font-size:11px;color:var(--text-muted);font-weight:600;}
+.compare-bar-wrap{display:flex;align-items:center;gap:8px;}
+.compare-track{flex:1;height:10px;background:#E2E8F0;border-radius:5px;overflow:hidden;position:relative;}
+.compare-fill{height:100%;border-radius:5px;}
+.compare-num{width:36px;font-size:13px;font-weight:800;text-align:right;}
+.compare-head{font-size:12px;font-weight:700;text-align:center;padding:6px 0;}
+.var-table{width:100%;border-collapse:collapse;}
+.var-table th{background:#F8FAFC;padding:8px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+.var-table td{padding:10px 12px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
+.var-table tr:last-child td{border-bottom:none;}
+.var-table tr:hover td{background:#FAFAFA;}
+.pct-big{font-size:15px;font-weight:800;}
+.sabana-section{margin-bottom:28px;}
+.sabana-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sabana-count{font-size:11px;font-weight:600;background:#E0F2FE;color:#0369A1;padding:2px 8px;border-radius:20px;}
+.sabana-table{width:100%;border-collapse:collapse;font-size:12px;}
+.sabana-table th{background:#F8FAFC;padding:7px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+.sabana-table td{padding:8px 10px;border-bottom:1px solid #F3F4F6;vertical-align:middle;}
+.sabana-table tr:last-child td{border-bottom:none;}
+.sabana-table tr:hover td{background:#FAFAFA;}
+.deal-link{color:#2563EB;text-decoration:none;font-weight:600;}
+.deal-link:hover{text-decoration:underline;}
+.no-sdr{font-size:10px;font-weight:600;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:4px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;}
+.modal{background:white;border-radius:16px;padding:24px;min-width:320px;max-width:480px;width:90%;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;}
+.pin-input{width:100%;padding:10px 14px;border:2px solid #E5E7EB;border-radius:8px;font-size:18px;letter-spacing:4px;text-align:center;outline:none;}
+.pin-input:focus{border-color:#3B82F6;}
+.pin-error{color:#EF4444;font-size:12px;margin-top:6px;text-align:center;}
+.admin-subtabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);}
+.admin-subtab-btn{background:none;border:none;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.admin-subtab-btn.active{color:#F59E0B;border-bottom-color:#F59E0B;}
+.admin-subtab-btn:hover{color:var(--text);}
+.param-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.param-group{background:#F8FAFC;border:1px solid var(--border);border-radius:10px;padding:14px;}
+.param-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:10px;}
+.param-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.param-row:last-child{margin-bottom:0;}
+.param-lbl{font-size:12px;color:var(--text);}
+.param-input{width:80px;padding:4px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:13px;text-align:right;}
+.param-input:focus{outline:none;border-color:#3B82F6;}
+.param-input-wide{width:160px;text-align:left;}
+.team-table{width:100%;border-collapse:collapse;}
+.team-table th{background:#F8FAFC;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:2px solid var(--border);}
+.team-table td{padding:7px 10px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
+.team-table tr:last-child td{border-bottom:none;}
+.team-input{width:100%;padding:4px 7px;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;}
+.team-input:focus{outline:none;border-color:#3B82F6;}
+.payment-table{width:100%;border-collapse:collapse;}
+.payment-table th{background:#0F172A;color:white;padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
+.payment-table td{padding:10px 12px;border-bottom:1px solid #F3F4F6;font-size:13px;vertical-align:middle;}
+.payment-table tr:last-child td{border-bottom:none;}
+.payment-table tr:hover td{background:#FAFAFA;}
+.money-big{font-size:15px;font-weight:800;}
+.override-table{width:100%;border-collapse:collapse;}
+.override-table th{background:#F8FAFC;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:2px solid var(--border);text-align:left;}
+.override-table td{padding:9px 10px;border-bottom:1px solid #F3F4F6;font-size:12px;vertical-align:middle;}
+.ca-input{width:70px;padding:4px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:13px;text-align:center;}
+.ca-input:focus{outline:none;border-color:#F59E0B;}
+.hos-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.footer{font-size:11px;color:#94A3B8;text-align:center;padding:16px;}
+@media(max-width:900px){
+  .bono-wrap,.param-grid{grid-template-columns:1fr;}
+  .pod-body{grid-template-columns:1fr;}
+  .compare-grid{grid-template-columns:70px 1fr 1fr;}
+  .hos-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
+<!-- PIN Modal -->
+<div id="pinModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-title">🔒 Acceso Admin</div>
+    <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="8"
+      onkeydown="if(event.key==='Enter')submitPin()">
+    <div id="pinError" class="pin-error hidden">PIN incorrecto. Intentá de nuevo.</div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn btn-primary" onclick="submitPin()">Ingresar</button>
+      <button class="btn btn-ghost" onclick="closeModal('pinModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Override Modal -->
+<div id="overrideModal" class="modal-overlay hidden">
+  <div class="modal" id="overrideModalContent"></div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay hidden" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">Cargando datos de HubSpot…</div>
 </div>
 
+<!-- Header -->
 <div class="header">
   <div>
-    <div class="header-title">🏆 Tracking 2.0 — Pods Comerciales</div>
+    <div class="header-title">📊 Tracking Incentivos Comerciales</div>
     <div class="header-sub" id="headerSub">Valiu · cargando…</div>
   </div>
   <div class="header-controls">
     <input type="month" id="monthPicker">
     <button class="btn btn-primary" onclick="loadData()">↺ Actualizar</button>
+    <button class="btn btn-ghost" id="adminBtn" onclick="toggleAdmin()">🔒</button>
   </div>
 </div>
 
+<!-- Tabs -->
 <div class="tabs">
   <button class="tab-btn active" id="tab-dashboard" onclick="switchTab('dashboard')">📊 Dashboard</button>
   <button class="tab-btn" id="tab-sabana" onclick="switchTab('sabana')">📋 Sábana</button>
+  <button class="tab-btn admin-tab hidden" id="tab-admin" onclick="switchTab('admin')">⚙️ Admin</button>
 </div>
 
+<!-- Main -->
 <div class="main" id="mainContent" style="display:none;">
-
   <div class="error-banner" id="errorBanner"></div>
   <div class="alert-banner" id="alertBanner"></div>
 
-  <!-- ── DASHBOARD TAB ── -->
+  <!-- DASHBOARD -->
   <div id="tabDashboard">
-
     <div class="section-title">⭐ Bonos del mes</div>
     <div class="bono-wrap">
       <div class="bono-card bono-pending" id="bonoEqCard">
         <div class="bono-icon">🤝</div>
-        <div>
-          <div class="bono-label">Bono Equipo · +10pp</div>
-          <div class="bono-val" id="bonoEqVal">—</div>
-          <div class="bono-det" id="bonoEqDet">Valiu activa ≥10 clientes/mes (todos los canales)</div>
-        </div>
+        <div><div class="bono-label">Bono Equipo</div><div class="bono-val" id="bonoEqVal">—</div><div class="bono-det" id="bonoEqDet"></div></div>
       </div>
       <div class="bono-card bono-pending" id="bonoCompCard">
         <div class="bono-icon">🏆</div>
-        <div>
-          <div class="bono-label">Bono Competencia · +10pp</div>
-          <div class="bono-val" id="bonoCompVal">—</div>
-          <div class="bono-det" id="bonoCompDet">Más outbound + mín. 4 demos y 3 clientes por pod</div>
-        </div>
+        <div><div class="bono-label">Bono Competencia</div><div class="bono-val" id="bonoCompVal">—</div><div class="bono-det" id="bonoCompDet"></div></div>
       </div>
     </div>
 
-    <div class="section-title">👤 Performance individual</div>
-    <div class="grid-2" style="margin-bottom:18px;">
-      <div class="pod-section pod-a">
-        <div class="pod-header">
-          <span>Pod A</span>
-          <span class="pod-sub" id="podASubtitle"></span>
-        </div>
-        <div class="pod-body">
-          <div class="person-card" id="card-maria"></div>
-          <div class="person-card" id="card-andrea"></div>
-          <div class="person-card" id="card-rocio"></div>
-        </div>
-      </div>
-      <div class="pod-section pod-b">
-        <div class="pod-header">
-          <span>Pod B</span>
-          <span class="pod-sub" id="podBSubtitle"></span>
-        </div>
-        <div class="pod-body">
-          <div class="person-card" id="card-carlos"></div>
-          <div class="person-card" id="card-yamila"></div>
-          <div class="person-card" id="card-agustin"></div>
-        </div>
-      </div>
+    <div class="section-title">👥 Pod A</div>
+    <div class="pod-section pod-a">
+      <div class="pod-header"><span>Pod A</span><span class="pod-sub" id="podASubtitle"></span></div>
+      <div class="pod-body" id="podABody"></div>
     </div>
 
-    <div class="section-title">🤝 Clientes outbound activados — componente pod (meta: 6/mes)</div>
-    <div class="card" style="margin-bottom:18px;" id="podCompareCard"></div>
+    <div class="section-title">👥 Pod B</div>
+    <div class="pod-section pod-b">
+      <div class="pod-header"><span>Pod B</span><span class="pod-sub" id="podBSubtitle"></span></div>
+      <div class="pod-body" id="podBBody"></div>
+    </div>
 
-    <div class="section-title">💰 Variable final</div>
-    <div class="card" style="margin-bottom:18px; overflow-x:auto;">
+    <div class="section-title">⚔️ Comparativa de pods</div>
+    <div class="card" id="podCompareCard"></div>
+
+    <div class="section-title">📋 Cumplimiento variable final</div>
+    <div class="card">
       <table class="var-table">
-        <thead>
-          <tr>
-            <th>Persona</th><th>Rol</th><th>Pod</th>
-            <th>% Indiv.</th><th>% Pod</th>
-            <th>Bono Eq.</th><th>Bono Comp.</th>
-            <th>% Final</th><th>Piso</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Nombre</th><th>Rol</th><th>Pod</th>
+          <th>Individual</th><th>Pod</th>
+          <th>B. Equipo</th><th>B. Comp.</th>
+          <th>% Final</th><th>Piso</th>
+        </tr></thead>
         <tbody id="varBody"></tbody>
       </table>
     </div>
 
-    <div class="footer" id="footer"></div>
   </div>
 
-  <!-- ── SÁBANA TAB ── -->
+  <!-- SÁBANA -->
   <div id="tabSabana" style="display:none;">
-
     <div class="sabana-section">
-      <div class="sabana-title">
-        🎯 Leads calificadas
-        <span class="sabana-count" id="leadsCount">0</span>
-        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Salida de Demo Agendada → pipeline Ventas / Apertura / CS</span>
-      </div>
-      <div class="card" style="overflow-x:auto;">
+      <div class="sabana-title">🟢 Cuentas activadas<span class="sabana-count" id="activationsCount">0</span></div>
+      <div style="overflow-x:auto;">
         <table class="sabana-table">
-          <thead>
-            <tr>
-              <th>Deal</th><th>SDR</th><th>Pipeline</th><th>Fecha demo calificada</th><th>Volumen</th><th>Pts</th>
-            </tr>
-          </thead>
-          <tbody id="sabanaLeadsBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="sabana-section">
-      <div class="sabana-title">
-        ✅ Nuevos clientes activados
-        <span class="sabana-count" id="activationsCount">0</span>
-        <span style="font-size:11px;font-weight:400;color:var(--text-muted);">Por fecha de activación</span>
-      </div>
-      <div class="card" style="overflow-x:auto;">
-        <table class="sabana-table">
-          <thead>
-            <tr>
-              <th>Deal</th><th>KAM</th><th>SDR</th><th>Fuente</th><th>Fecha activación</th><th>Volumen</th><th>Pts</th><th>Control</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Deal</th><th>KAM</th><th>SDR</th><th>Fuente</th><th>Fecha Activación</th><th>Volumen</th><th>Pts</th><th>Doble ctrl</th></tr></thead>
           <tbody id="sabanaActBody"></tbody>
         </table>
       </div>
     </div>
-
-    <div class="sabana-section" id="alertSection" style="display:none;">
-      <div class="sabana-title">
-        ⚠️ A resolver — salieron de "Cuenta sin activación" pero sin fecha de activación
+    <div class="sabana-section">
+      <div class="sabana-title">📋 Leads calificadas<span class="sabana-count" id="leadsCount">0</span></div>
+      <div style="overflow-x:auto;">
+        <table class="sabana-table">
+          <thead><tr><th>Deal</th><th>SDR</th><th>Pipeline</th><th>Fecha salida Demo</th><th>Volumen</th><th>Pts</th></tr></thead>
+          <tbody id="sabanaLeadsBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="sabana-section hidden" id="alertSection">
+      <div class="sabana-title" style="color:#92400E;">
+        ⚠️ A resolver — salieron de "Cuenta sin activación" pero sin fecha correcta
         <span class="sabana-count" id="alertsCount" style="background:#FEF3C7;color:#92400E;">0</span>
       </div>
-      <div class="card" style="overflow-x:auto;">
+      <div style="overflow-x:auto;">
         <table class="sabana-table">
-          <thead>
-            <tr>
-              <th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th></tr></thead>
           <tbody id="sabanaAlertBody"></tbody>
         </table>
       </div>
     </div>
-
     <div class="footer" id="footer2"></div>
   </div>
 
+  <!-- ADMIN -->
+  <div id="tabAdmin" style="display:none;">
+    <div class="admin-subtabs">
+      <button class="admin-subtab-btn active" id="asubtab-params" onclick="switchAdminTab('params')">⚙️ Parámetros</button>
+      <button class="admin-subtab-btn" id="asubtab-team" onclick="switchAdminTab('team')">👥 Equipo</button>
+      <button class="admin-subtab-btn" id="asubtab-overrides" onclick="switchAdminTab('overrides')">📅 Overrides</button>
+      <button class="admin-subtab-btn" id="asubtab-hos" onclick="switchAdminTab('hos')">👤 Mi desempeño</button>
+      <button class="admin-subtab-btn" id="asubtab-payment" onclick="switchAdminTab('payment')">💰 Cierre de Mes</button>
+    </div>
+    <div id="adminParams"></div>
+    <div id="adminTeam" style="display:none;"></div>
+    <div id="adminOverrides" style="display:none;"></div>
+    <div id="adminHos" style="display:none;"></div>
+    <div id="adminPayment" style="display:none;"></div>
+  </div>
+
 </div>
+<div class="footer" id="footer"></div>
 
 <script>
-// ════════════════════════════════════════════════════
-// CONSTANTS
-// ════════════════════════════════════════════════════
-const OID = {
-  MARIA:   '729221560',
-  ANDREA:  '91653845',
-  CARLOS:  '90253953',
-  YAMILA:  '77904392',
-  ROCIO:   '2104711324',
-  AGUSTIN: '209899615',
+// ═══════════════════════════════════════════════
+// N-LEVEL MAPPING  (new HubSpot string values)
+// ═══════════════════════════════════════════════
+const N_STRINGS = {
+  '(N1) $20,000 - $50,000 USD':   { w:0.25, n:'N1' },
+  '(N2) $50,001 - $160,000 USD':  { w:0.5,  n:'N2' },
+  '(N3) $160,001 - $300,000 USD': { w:1.0,  n:'N3' },
+  '(N4) $300,001 - $500,000 USD': { w:1.5,  n:'N4' },
+  '(N5) + $500,000 USD':          { w:2.0,  n:'N5' },
 };
-const OWNER_NAME = {
-  '729221560':  'María',
-  '91653845':   'Andrea',
-  '90253953':   'Carlos',
-  '77904392':   'Yamila',
-  '2104711324': 'Rocío',
-  '209899615':  'Agustín',
+function nLevel(vol) { return N_STRINGS[vol] || null; }
+
+// ═══════════════════════════════════════════════
+// DEFAULT CONFIG
+// ═══════════════════════════════════════════════
+const DEFAULT_CFG = {
+  SDR_TARGET:7, KAM_NC_TARGET:8, KAM_CA_TARGET:80, KAM_CA_MIN:50,
+  POD_TARGET:6,
+  BONO_EQ_MIN:10, BONO_EQ_PP:10,
+  COMP_MIN_CLI:3, COMP_MIN_DEMOS:4, BONO_COMP_PP:10,
+  INDIV_W:70, POD_W:30, FLOOR:30,
+  HOS_ACT_PTS_W:50, HOS_ACT_COUNT_W:0, HOS_CA_W:25, HOS_LEADS_W:25,
+  HOS_BONO_EQ_MIN:10, HOS_BONO_EQ_PP:20,
+  HOS_KAMS_ONLY:true, HOS_ACT_COUNT_TARGET:8,
+  NON_OUTBOUND:'Referidos por Clientes,Friends & Families,Bases Sales OPS,Referidos por clientes',
+  HUBSPOT_PORTAL_ID:'',
 };
-
-const POD_A_SDRS = [OID.MARIA, OID.ANDREA];
-const POD_B_SDRS = [OID.CARLOS, OID.YAMILA];
-
-const N_MAP = {
-  'Menor a $20,000 USD':          0.25,
-  'Menor a $25,000 USD':          0.25,
-  'Entre $25,000 y $50,000 USD':  0.5,
-  'Entre $50,000 y $100,000 USD': 1,
-  'Entre $100,001 y $200,000 USD':1.5,
-  'Entre $200,001 y $500,000 USD':2,
-};
-const N_LABEL = {
-  'Menor a $20,000 USD':          'N1',
-  'Menor a $25,000 USD':          'N1',
-  'Entre $25,000 y $50,000 USD':  'N2',
-  'Entre $50,000 y $100,000 USD': 'N3',
-  'Entre $100,001 y $200,000 USD':'N4',
-  'Entre $200,001 y $500,000 USD':'N5',
-};
-const PIPELINE_NAMES = {
-  'default':   'Ventas',
-  '53531296':  'Apertura de Cuentas',
-  '10153632':  'Customer Success',
-  '656358057': 'Prospección',
-};
-
-const NON_OUTBOUND  = ['Referidos por clientes', 'Friends & Families'];
-
-const SDR_TARGET     = 7;
-const KAM_NC_TARGET  = 8;
-const KAM_CA_TARGET  = 80;
-const POD_TARGET     = 6;
-const BONO_EQ_MIN    = 10;
-const COMP_MIN_DEMOS = 4;
-const COMP_MIN_CLI   = 3;
-const FLOOR          = 0.30;
-
-// ════════════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════════════
-const S = {
-  activated: [],   // fecha_activacion in month
-  leads: [],       // exited Demo Agendada + in Ventas/Apertura/CS
-  kamExit: [],     // exited "Cuenta sin activacion" in month (double control)
-  caRocio:   localStorage.getItem('ca_rocio')   || '',
-  caAgustin: localStorage.getItem('ca_agustin') || '',
-};
-
-// ════════════════════════════════════════════════════
-// TABS
-// ════════════════════════════════════════════════════
-let activeTab = 'dashboard';
-function switchTab(t) {
-  activeTab = t;
-  document.getElementById('tabDashboard').style.display = t === 'dashboard' ? '' : 'none';
-  document.getElementById('tabSabana').style.display    = t === 'sabana'    ? '' : 'none';
-  document.getElementById('tab-dashboard').className = 'tab-btn' + (t === 'dashboard' ? ' active' : '');
-  document.getElementById('tab-sabana').className    = 'tab-btn' + (t === 'sabana'    ? ' active' : '');
+function getCfg() {
+  try { return Object.assign({}, DEFAULT_CFG, JSON.parse(localStorage.getItem('v2_cfg')||'{}')); }
+  catch(e) { return Object.assign({}, DEFAULT_CFG); }
 }
+function saveCfg(c) { localStorage.setItem('v2_cfg', JSON.stringify(c)); }
 
-// ════════════════════════════════════════════════════
-// API
-// ════════════════════════════════════════════════════
-async function callHS(body) {
-  const res = await fetch('/api/hubspot', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || err.message || JSON.stringify(err) || `HTTP ${res.status}`);
-  }
-  return res.json();
+// ═══════════════════════════════════════════════
+// DEFAULT TEAM
+// ═══════════════════════════════════════════════
+const DEFAULT_TEAM = [
+  { key:'MARIA',   name:'María',   role:'SDR', pod:'A', oid:'729221560',  active:true, target:7, varSalary:800,  bonoExtra:0   },
+  { key:'ANDREA',  name:'Andrea',  role:'SDR', pod:'A', oid:'91653845',   active:true, target:7, varSalary:800,  bonoExtra:0   },
+  { key:'CARLOS',  name:'Carlos',  role:'SDR', pod:'B', oid:'90253953',   active:true, target:7, varSalary:800,  bonoExtra:0   },
+  { key:'YAMILA',  name:'Yamila',  role:'SDR', pod:'B', oid:'77904392',   active:true, target:7, varSalary:800,  bonoExtra:0   },
+  { key:'ROCIO',   name:'Rocío',   role:'KAM', pod:'A', oid:'2104711324', active:true, target:8, varSalary:1000, bonoExtra:250 },
+  { key:'AGUSTIN', name:'Agustín', role:'KAM', pod:'B', oid:'209899615',  active:true, target:8, varSalary:1200, bonoExtra:250 },
+  { key:'LAUTI',   name:'Lautaro', role:'HOS', pod:null,oid:null,         active:true, target:0, varSalary:3250, bonoExtra:0   },
+];
+function getTeam() {
+  try { return JSON.parse(localStorage.getItem('v2_team')||'null') || DEFAULT_TEAM.map(t=>({...t})); }
+  catch(e) { return DEFAULT_TEAM.map(t=>({...t})); }
 }
+function saveTeam(t) { localStorage.setItem('v2_team', JSON.stringify(t)); }
 
-// ════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  const now = new Date();
-  document.getElementById('monthPicker').value =
-    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  loadData();
-});
-
-// ════════════════════════════════════════════════════
-// LOAD DATA
-// ════════════════════════════════════════════════════
-async function loadData() {
-  setLoading(true, 'Cargando datos de HubSpot…');
-  setError(null);
-  document.getElementById('mainContent').style.display = 'none';
-
-  const mv = document.getElementById('monthPicker').value;
-  if (!mv) { setError('Seleccioná un mes.'); setLoading(false); return; }
-
-  const [y, m] = mv.split('-').map(Number);
-  const d1  = `${y}-${String(m).padStart(2,'0')}-01`;
-  const nm  = m === 12 ? 1 : m + 1;
-  const ny  = m === 12 ? y + 1 : y;
-  const d2  = `${ny}-${String(nm).padStart(2,'0')}-01`;
-  const d1ms = String(new Date(d1 + 'T00:00:00.000Z').getTime());
-  const d2ms = String(new Date(d2 + 'T00:00:00.000Z').getTime());
-
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+function isAdmin() { return sessionStorage.getItem('v2_admin')==='1'; }
+function setAdmin(v) { v ? sessionStorage.setItem('v2_admin','1') : sessionStorage.removeItem('v2_admin'); }
+function toggleAdmin() {
+  if (isAdmin()) { setAdmin(false); refreshAdminUI(); }
+  else { document.getElementById('pinModal').classList.remove('hidden'); setTimeout(()=>document.getElementById('pinInput').focus(),50); }
+}
+async function submitPin() {
+  const pin = document.getElementById('pinInput').value;
+  if (!pin) return;
   try {
-    const [actRes, leadRes, exitRes] = await Promise.all([
+    let d;
+    try {
+      const r = await fetch('/api/admin-auth', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({pin}) });
+      d = await r.json();
+    } catch(e) {
+      // Fallback for local testing (no server): PIN = "1234"
+      d = { ok: pin === '2250' };
+    }
+    if (d.ok) {
+      setAdmin(true);
+      document.getElementById('pinInput').value='';
+      document.getElementById('pinError').classList.add('hidden');
+      closeModal('pinModal');
+      refreshAdminUI();
+      if (S.activated.length||S.leads.length) { render(); renderSabana(); renderAdmin(); }
+    } else {
+      document.getElementById('pinError').classList.remove('hidden');
+    }
+  } catch(e) {
+    document.getElementById('pinError').textContent='Error de conexión.';
+    document.getElementById('pinError').classList.remove('hidden');
+  }
+}
+function refreshAdminUI() {
+  const admin = isAdmin();
+  document.getElementById('adminBtn').textContent = admin?'🔓':'🔒';
+  document.getElementById('tab-admin').classList.toggle('hidden', !admin);
+  // hosSection removed from dashboard
+  if (!admin && activeTab==='admin') switchTab('dashboard');
+}
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-      // Q1 — Nuevos clientes (fecha_activacion)
-      callHS({
-        properties: ['dealname','hubspot_owner_id','sdr__que_agendo_',
-                     'fecha_activacion','fuente_principal_de_lead',
-                     'promedio___volumen_operado_al_mes__detallado_','pipeline'],
-        filterGroups: [{ filters: [
-          { propertyName:'fecha_activacion', operator:'GTE', value:d1ms },
-          { propertyName:'fecha_activacion', operator:'LT',  value:d2ms },
-        ]}],
-        limit: 200,
-      }),
+// ═══════════════════════════════════════════════
+// OVERRIDES & LOCAL STATE
+// ═══════════════════════════════════════════════
+function getOverrides() {
+  try { return JSON.parse(localStorage.getItem('v2_overrides')||'{}'); } catch(e) { return {}; }
+}
+function saveOverrides(o) { localStorage.setItem('v2_overrides', JSON.stringify(o)); }
+function getBonoOvr() {
+  try { return JSON.parse(localStorage.getItem('v2_bono_ovr')||'{}'); } catch(e) { return {}; }
+}
+function saveBonoOvr(o) { localStorage.setItem('v2_bono_ovr', JSON.stringify(o)); }
+function getCA() {
+  try { return JSON.parse(localStorage.getItem('v2_ca')||'{}'); } catch(e) { return {}; }
+}
+function saveCA(key, val) {
+  const ca=getCA(); ca[key]=val; localStorage.setItem('v2_ca',JSON.stringify(ca));
+  if (S.allActivated.length||S.leads.length) { render(); renderSabana(); if(isAdmin()) renderAdmin(); }
+}
 
-      // Q2 — Leads calificadas (salida Demo Agendada + pipeline ≠ Prospección)
-      callHS({
-        properties: ['dealname','sdr__que_agendo_',
-                     'hs_v2_date_exited_965485717',
-                     'promedio___volumen_operado_al_mes__detallado_','pipeline'],
-        filterGroups: [{ filters: [
-          { propertyName:'hs_v2_date_exited_965485717', operator:'GTE', value:d1ms },
-          { propertyName:'hs_v2_date_exited_965485717', operator:'LT',  value:d2ms },
-          { propertyName:'pipeline', operator:'NEQ', value:'656358057' },
-        ]}],
-        limit: 200,
-      }),
+// ═══════════════════════════════════════════════
+// STATE & CONSTANTS
+// ═══════════════════════════════════════════════
+const S = { activated:[], leads:[], kamExit:[], allActivated:[] };
+let activeTab='dashboard', activeAdminTab='params';
+const PIPELINE_NAMES = { 'default':'Ventas','53531296':'Apertura de Cuentas','10153632':'Customer Success','656358057':'Prospección' };
 
-      // Q3 — Double control KAM: salió de "Cuenta abierta / Sin activación"
-      callHS({
-        properties: ['dealname','hubspot_owner_id','fecha_activacion',
-                     'hs_v2_date_exited_29556535',
-                     'fuente_principal_de_lead','promedio___volumen_operado_al_mes__detallado_'],
-        filterGroups: [{ filters: [
-          { propertyName:'hs_v2_date_exited_29556535', operator:'GTE', value:d1ms },
-          { propertyName:'hs_v2_date_exited_29556535', operator:'LT',  value:d2ms },
-        ]}],
-        limit: 200,
-      }),
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function ownerMap(team) { const m={}; team.forEach(p=>{ if(p.oid) m[p.oid]=p.name; }); return m; }
+function dealLink(id, name, cfg) {
+  const n = name||'—';
+  if (!cfg.HUBSPOT_PORTAL_ID) return `<span style="font-weight:600;">${n}</span>`;
+  return `<a class="deal-link" href="https://app.hubspot.com/contacts/${cfg.HUBSPOT_PORTAL_ID}/deal/${id}" target="_blank">${n}</a>`;
+}
+function pct(p) { return (p*100).toFixed(0)+'%'; }
+function money(v) { return '$'+Math.round(v).toLocaleString('en-US'); }
+function badge(p) {
+  const lbl=pct(p);
+  if (p>=1) return `<span class="badge badge-green">${lbl}</span>`;
+  if (p>=0.5) return `<span class="badge badge-amber">${lbl}</span>`;
+  if (p>0) return `<span class="badge badge-red">${lbl}</span>`;
+  return `<span class="badge badge-gray">${lbl}</span>`;
+}
+function colorPct(p) {
+  const c=p>=1?'#059669':p>=0.5?'#D97706':'#DC2626';
+  return `<span style="font-weight:700;color:${c}">${pct(p)}</span>`;
+}
+function nPill(n,v) {
+  return v?`<span class="n-pill hit">${n}×${v}</span>`:`<span class="n-pill">${n}</span>`;
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(t) {
+  activeTab=t;
+  const panels={dashboard:'tabDashboard',sabana:'tabSabana',admin:'tabAdmin'};
+  Object.keys(panels).forEach(id=>{
+    document.getElementById('tab-'+id)?.classList.toggle('active',id===t);
+    document.getElementById(panels[id]).style.display=id===t?'':'none';
+  });
+  if (t==='admin'&&isAdmin()) renderAdmin();
+}
+function switchAdminTab(t) {
+  activeAdminTab=t;
+  ['params','team','overrides','hos','payment'].forEach(id=>{
+    document.getElementById('asubtab-'+id).classList.toggle('active',id===t);
+    document.getElementById('admin'+id.charAt(0).toUpperCase()+id.slice(1)).style.display=id===t?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════════
+async function callHS(body) {
+  const r=await fetch('/api/hubspot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if (!r.ok) { const e=await r.json().catch(()=>({})); throw new Error(e.error||e.message||`HTTP ${r.status}`); }
+  return r.json();
+}
+
+// ═══════════════════════════════════════════════
+// LOAD DATA
+// ═══════════════════════════════════════════════
+async function loadData() {
+  setLoading(true,'Cargando datos de HubSpot…');
+  setError(null);
+  document.getElementById('mainContent').style.display='none';
+  const mv=document.getElementById('monthPicker').value;
+  if (!mv) { setError('Seleccioná un mes.'); setLoading(false); return; }
+  const [y,m]=mv.split('-').map(Number);
+  const d1=`${y}-${String(m).padStart(2,'0')}-01`;
+  const nm=m===12?1:m+1, ny=m===12?y+1:y;
+  const d2=`${ny}-${String(nm).padStart(2,'0')}-01`;
+  const d1ms=String(new Date(d1+'T00:00:00.000Z').getTime());
+  const d2ms=String(new Date(d2+'T00:00:00.000Z').getTime());
+  const actProps=['dealname','hubspot_owner_id','sdr__que_agendo_','fecha_activacion',
+                  'fuente_principal_de_lead','promedio___volumen_operado_al_mes__detallado_','pipeline'];
+  try {
+    const [actRes,leadRes,exitRes]=await Promise.all([
+      callHS({ properties:actProps,
+        filterGroups:[{filters:[
+          {propertyName:'fecha_activacion',operator:'GTE',value:d1ms},
+          {propertyName:'fecha_activacion',operator:'LT', value:d2ms},
+        ]}], limit:200 }),
+      callHS({ properties:['dealname','sdr__que_agendo_','hs_v2_date_exited_965485717',
+               'promedio___volumen_operado_al_mes__detallado_','pipeline'],
+        filterGroups:[{filters:[
+          {propertyName:'hs_v2_date_exited_965485717',operator:'GTE',value:d1ms},
+          {propertyName:'hs_v2_date_exited_965485717',operator:'LT', value:d2ms},
+          {propertyName:'pipeline',operator:'NEQ',value:'656358057'},
+        ]}], limit:200 }),
+      callHS({ properties:['dealname','hubspot_owner_id','fecha_activacion',
+               'hs_v2_date_exited_29556535','fuente_principal_de_lead',
+               'promedio___volumen_operado_al_mes__detallado_'],
+        filterGroups:[{filters:[
+          {propertyName:'hs_v2_date_exited_29556535',operator:'GTE',value:d1ms},
+          {propertyName:'hs_v2_date_exited_29556535',operator:'LT', value:d2ms},
+        ]}], limit:200 }),
     ]);
 
-    S.activated = actRes.results  || [];
-    S.leads     = leadRes.results || [];
-    S.kamExit   = exitRes.results || [];
+    // Apply overrides
+    const ovr=getOverrides();
+    const apiDeals=actRes.results||[];
+    // Exclude deals overridden to another month OR discarded
+    const excluded=new Set(Object.keys(ovr).filter(id=>ovr[id].assignedMonth!==mv||ovr[id].discarded));
+    S.allActivated=apiDeals.filter(d=>!excluded.has(String(d.id)));
+    // Inject overridden deals assigned to this month
+    Object.values(ovr).forEach(o=>{
+      if (o.assignedMonth===mv&&!o.discarded&&!S.allActivated.find(d=>String(d.id)===String(o.dealId))) {
+        S.allActivated.push({id:o.dealId, properties:o.properties});
+      }
+    });
 
-    render();
-    renderSabana();
+    const cfg=getCfg();
+    const team=getTeam();
+    const kamOids=new Set(team.filter(p=>p.role==='KAM'&&p.active&&p.oid).map(p=>p.oid));
+    S.activated=S.allActivated.filter(d=>kamOids.has(d.properties.hubspot_owner_id));
+    S.leads=leadRes.results||[];
+    S.kamExit=exitRes.results||[];
 
+    render(); renderSabana();
+    if (isAdmin()) renderAdmin();
   } catch(e) {
-    setError('Error cargando HubSpot: ' + e.message);
-  } finally {
-    setLoading(false);
-  }
+    setError('Error cargando HubSpot: '+e.message);
+  } finally { setLoading(false); }
 }
 
-// ════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // COMPUTE
-// ════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 function compute() {
-  // SDR points from leads
-  const sdr = {};
-  for (const id of Object.values(OID)) sdr[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
+  const cfg=getCfg(), team=getTeam(), omap=ownerMap(team);
+  const ca=getCA(), bonoOvr=getBonoOvr();
+  const nonOut=cfg.NON_OUTBOUND.split(',').map(s=>s.trim());
+  const sdrs=team.filter(p=>p.role==='SDR'&&p.active&&p.oid);
+  const kams=team.filter(p=>p.role==='KAM'&&p.active&&p.oid);
+  const hos=team.find(p=>p.role==='HOS'&&p.active);
+  const podAOids=new Set(sdrs.filter(p=>p.pod==='A').map(p=>p.oid));
+  const podBOids=new Set(sdrs.filter(p=>p.pod==='B').map(p=>p.oid));
 
+  // SDR stats from leads
+  const sdrMap={};
+  sdrs.forEach(p=>sdrMap[p.oid]={n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0});
   for (const d of S.leads) {
-    const id  = d.properties.sdr__que_agendo_;
-    if (!id) continue;
-    if (!sdr[id]) sdr[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
-    const vol = d.properties.promedio___volumen_operado_al_mes__detallado_;
-    const w = N_MAP[vol];
-    const n = N_LABEL[vol];
-    if (w && n) { sdr[id][n.toLowerCase()]++; sdr[id].pts += w; }
-    sdr[id].count++;
+    const oid=d.properties.sdr__que_agendo_;
+    if (!sdrMap[oid]) continue;
+    const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
+    if (!nl) continue;
+    sdrMap[oid][nl.n.toLowerCase()]++; sdrMap[oid].pts+=nl.w; sdrMap[oid].count++;
   }
 
-  // KAM new clients from activations
-  const kam = {};
-  for (const id of [OID.ROCIO, OID.AGUSTIN]) kam[id] = { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
-
+  // KAM stats from activations
+  const kamMap={};
+  kams.forEach(p=>kamMap[p.oid]={n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0});
   for (const d of S.activated) {
-    const id  = d.properties.hubspot_owner_id;
-    if (!kam[id]) continue;
-    const vol = d.properties.promedio___volumen_operado_al_mes__detallado_;
-    const w = N_MAP[vol];
-    const n = N_LABEL[vol];
-    if (w && n) { kam[id][n.toLowerCase()]++; kam[id].pts += w; }
-    kam[id].count++;
+    const oid=d.properties.hubspot_owner_id;
+    if (!kamMap[oid]) continue;
+    const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
+    if (!nl) continue;
+    kamMap[oid][nl.n.toLowerCase()]++; kamMap[oid].pts+=nl.w; kamMap[oid].count++;
   }
 
-  // Pod outbound + demos
-  let podAOut=0, podBOut=0, podADem=0, podBDem=0;
-  for (const d of S.activated) {
-    const sid = d.properties.sdr__que_agendo_;
-    const src = d.properties.fuente_principal_de_lead || '';
-    if (!sid || NON_OUTBOUND.includes(src)) continue;
-    if (POD_A_SDRS.includes(sid))      podAOut++;
-    else if (POD_B_SDRS.includes(sid)) podBOut++;
+  // Pod outbound & demos
+  let podAOut=0,podBOut=0,podADem=0,podBDem=0;
+  for (const d of S.allActivated) {
+    const sid=d.properties.sdr__que_agendo_,src=d.properties.fuente_principal_de_lead||'';
+    if (!sid||nonOut.includes(src)) continue;
+    if (podAOids.has(sid)) podAOut++;
+    else if (podBOids.has(sid)) podBOut++;
   }
   for (const d of S.leads) {
-    const sid = d.properties.sdr__que_agendo_;
-    if (POD_A_SDRS.includes(sid))      podADem++;
-    else if (POD_B_SDRS.includes(sid)) podBDem++;
+    const sid=d.properties.sdr__que_agendo_;
+    if (podAOids.has(sid)) podADem++;
+    else if (podBOids.has(sid)) podBDem++;
   }
 
-  // Bonos
-  const totalAct = S.activated.length;
-  const bonoEq   = totalAct >= BONO_EQ_MIN;
-  const aQual    = podAOut >= COMP_MIN_CLI && podADem >= COMP_MIN_DEMOS;
-  const bQual    = podBOut >= COMP_MIN_CLI && podBDem >= COMP_MIN_DEMOS;
-  let winner = null;
-  if (aQual && podAOut > podBOut)      winner = 'A';
-  else if (bQual && podBOut > podAOut) winner = 'B';
+  const totalAct=S.allActivated.length;
+  const bonoEq=totalAct>=cfg.BONO_EQ_MIN;
+  const aQual=podAOut>=cfg.COMP_MIN_CLI&&podADem>=cfg.COMP_MIN_DEMOS;
+  const bQual=podBOut>=cfg.COMP_MIN_CLI&&podBDem>=cfg.COMP_MIN_DEMOS;
+  let winner=null;
+  if (aQual&&podAOut>podBOut) winner='A';
+  else if (bQual&&podBOut>podAOut) winner='B';
 
-  // Double control alerts: in kamExit but not in activated (or fecha_activacion empty/wrong month)
-  const actIds = new Set(S.activated.map(d => String(d.id)));
-  const alerts = S.kamExit.filter(d => {
+  // Alerts
+  const actIds=new Set(S.activated.map(d=>String(d.id)));
+  const mv=document.getElementById('monthPicker').value;
+  const alerts=S.kamExit.filter(d=>{
     if (!actIds.has(String(d.id))) return true;
-    const fa = d.properties.fecha_activacion;
-    if (!fa) return true;
-    // Check if fecha_activacion matches the selected month
-    const mv = document.getElementById('monthPicker').value;
+    const fa=d.properties.fecha_activacion; if (!fa) return true;
     return !fa.startsWith(mv);
   });
 
-  return { sdr, kam, podAOut, podBOut, podADem, podBDem, totalAct, bonoEq, winner, alerts };
-}
-
-// ════════════════════════════════════════════════════
-// RENDER — DASHBOARD
-// ════════════════════════════════════════════════════
-function render() {
-  const C = compute();
-
-  // Alert banner
-  if (C.alerts.length > 0) {
-    const el = document.getElementById('alertBanner');
-    el.innerHTML = `⚠️ <strong>${C.alerts.length} deal${C.alerts.length>1?'s':''} a resolver</strong>: salieron de "Cuenta sin activación" pero no tienen fecha de activación correcta. Ver pestaña <strong>Sábana</strong>.`;
-    el.className = 'alert-banner show';
-  } else {
-    document.getElementById('alertBanner').className = 'alert-banner';
+  function personFinal(p) {
+    const pod=p.pod;
+    const podOut=pod==='A'?podAOut:podBOut;
+    const podPct=podOut/cfg.POD_TARGET;
+    let indivPct=0;
+    if (p.role==='SDR') {
+      indivPct=(sdrMap[p.oid]?.pts||0)/(p.target||cfg.SDR_TARGET);
+    } else if (p.role==='KAM') {
+      const ncPct=(kamMap[p.oid]?.pts||0)/(p.target||cfg.KAM_NC_TARGET);
+      const caVal=parseFloat(ca[p.key]||'')||0;
+      const caPct=caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN);
+      indivPct=0.5*ncPct+0.5*caPct;
+    }
+    const combined=(cfg.INDIV_W/100)*indivPct+(cfg.POD_W/100)*podPct;
+    const ovr=bonoOvr[p.key]||{};
+    const bEq=(bonoEq||ovr.forceBonoEq)?cfg.BONO_EQ_PP/100:0;
+    const bComp=(winner===pod||ovr.forceBonoComp)?cfg.BONO_COMP_PP/100:0;
+    const finalPct=combined+bEq+bComp;
+    const meetsFloor=combined>=cfg.FLOOR/100||!!ovr.forceFloor;
+    return {indivPct,podPct,combined,bEq,bComp,finalPct,meetsFloor};
   }
 
-  renderBonos(C);
-  renderPodCards(C);
-  renderPodCompare(C);
-  renderVarFinal(C);
+  function hosFinal() {
+    if (!hos) return null;
+    const caVal=parseFloat(ca['LAUTI']||'')||0;
+    const caPct=caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN);
+    const src=cfg.HOS_KAMS_ONLY?S.activated:S.allActivated;
+    let actPts=0,actCount=0;
+    for (const d of src) {
+      const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_);
+      if (nl) { actPts+=nl.w; actCount++; }
+    }
+    const kamTarget=kams.reduce((s,k)=>s+(k.target||cfg.KAM_NC_TARGET),0);
+    const sdrTarget=sdrs.reduce((s,p)=>s+(p.target||cfg.SDR_TARGET),0);
+    let leadPts=0;
+    for (const d of S.leads) { const nl=nLevel(d.properties.promedio___volumen_operado_al_mes__detallado_); if(nl) leadPts+=nl.w; }
+    const actPtsPct=kamTarget>0?actPts/kamTarget:0;
+    const actCountPct=cfg.HOS_ACT_COUNT_TARGET>0?actCount/cfg.HOS_ACT_COUNT_TARGET:0;
+    const leadsPct=sdrTarget>0?leadPts/sdrTarget:0;
+    const w={actPts:cfg.HOS_ACT_PTS_W/100,actCount:cfg.HOS_ACT_COUNT_W/100,ca:cfg.HOS_CA_W/100,leads:cfg.HOS_LEADS_W/100};
+    const indivPct=w.actPts*actPtsPct+w.actCount*actCountPct+w.ca*caPct+w.leads*leadsPct;
+    const bonoEqHos=totalAct>=cfg.HOS_BONO_EQ_MIN;
+    const bEq=bonoEqHos?cfg.HOS_BONO_EQ_PP/100:0;
+    const finalPct=indivPct+bEq;
+    const meetsFloor=indivPct>=cfg.FLOOR/100;
+    return {actPts,actCount,actPtsPct,actCountPct,caPct,caVal,leadsPct,leadPts,
+            indivPct,bEq,finalPct,meetsFloor,kamTarget,sdrTarget,bonoEqHos};
+  }
 
-  const mv = document.getElementById('monthPicker').value;
-  const [y, m2] = mv.split('-').map(Number);
-  const label = new Date(y, m2-1).toLocaleString('es', {month:'long', year:'numeric'});
-  document.getElementById('headerSub').textContent =
-    `Mes: ${label} · ${S.leads.length} leads calificadas · ${S.activated.length} activaciones`;
-  document.getElementById('footer').textContent =
-    'Última actualización: ' + new Date().toLocaleString('es');
-  document.getElementById('mainContent').style.display = 'block';
+  return {cfg,team,omap,sdrs,kams,hos,sdrMap,kamMap,
+          podAOut,podBOut,podADem,podBDem,totalAct,bonoEq,winner,alerts,
+          personFinal,hosFinal,ca};
+}
+
+// ═══════════════════════════════════════════════
+// RENDER — DASHBOARD
+// ═══════════════════════════════════════════════
+function render() {
+  const C=compute();
+  renderBonos(C); renderPodCards(C); renderPodCompare(C); renderVarFinal(C);
+  if (C.alerts.length>0) {
+    const el=document.getElementById('alertBanner');
+    el.innerHTML=`⚠️ <strong>${C.alerts.length} deal${C.alerts.length>1?'s':''} a resolver</strong>: salieron de "Cuenta sin activación" pero no tienen fecha de activación correcta. Ver pestaña <strong>Sábana</strong>.`;
+    el.className='alert-banner show';
+  } else { document.getElementById('alertBanner').className='alert-banner'; }
+  const mv=document.getElementById('monthPicker').value;
+  const [y,m2]=mv.split('-').map(Number);
+  const label=new Date(y,m2-1).toLocaleString('es',{month:'long',year:'numeric'});
+  document.getElementById('headerSub').textContent=`Mes: ${label} · ${S.leads.length} leads · ${S.allActivated.length} activaciones`;
+  document.getElementById('footer').textContent='Última actualización: '+new Date().toLocaleString('es');
+  document.getElementById('mainContent').style.display='block';
 }
 
 function renderBonos(C) {
-  const eq = document.getElementById('bonoEqCard');
-  eq.className = 'bono-card ' + (C.bonoEq ? 'bono-active' : 'bono-inactive');
-  document.getElementById('bonoEqVal').textContent = C.bonoEq ? '✅ ACTIVADO' : '❌ No alcanzado';
-  document.getElementById('bonoEqDet').textContent =
-    `${C.totalAct} clientes activados en el mes (meta ≥${BONO_EQ_MIN})`;
-
-  const comp = document.getElementById('bonoCompCard');
-  comp.className = 'bono-card ' + (C.winner ? 'bono-active' : 'bono-inactive');
-  document.getElementById('bonoCompVal').textContent =
-    C.winner === 'A' ? '✅ Gana Pod A' : C.winner === 'B' ? '✅ Gana Pod B' : '❌ Sin ganador';
-  document.getElementById('bonoCompDet').textContent =
-    `Pod A: ${C.podAOut} clientes, ${C.podADem} demos · Pod B: ${C.podBOut} clientes, ${C.podBDem} demos`;
+  const {cfg,bonoEq,winner,podAOut,podBOut,podADem,podBDem,totalAct}=C;
+  document.getElementById('bonoEqCard').className='bono-card '+(bonoEq?'bono-active':'bono-inactive');
+  document.getElementById('bonoEqVal').textContent=bonoEq?'✅ ACTIVADO':'❌ No alcanzado';
+  document.getElementById('bonoEqDet').textContent=`${totalAct} activaciones en el mes (meta ≥${cfg.BONO_EQ_MIN}) · +${cfg.BONO_EQ_PP}pp`;
+  document.getElementById('bonoCompCard').className='bono-card '+(winner?'bono-active':'bono-inactive');
+  document.getElementById('bonoCompVal').textContent=winner==='A'?'✅ Gana Pod A':winner==='B'?'✅ Gana Pod B':'❌ Sin ganador';
+  document.getElementById('bonoCompDet').textContent=`Pod A: ${podAOut} cli, ${podADem} demos · Pod B: ${podBOut} cli, ${podBDem} demos · +${cfg.BONO_COMP_PP}pp`;
 }
 
 function renderPodCards(C) {
-  [
-    { id:OID.MARIA,  cid:'card-maria',  pod:'A', name:'María'  },
-    { id:OID.ANDREA, cid:'card-andrea', pod:'A', name:'Andrea' },
-    { id:OID.CARLOS, cid:'card-carlos', pod:'B', name:'Carlos' },
-    { id:OID.YAMILA, cid:'card-yamila', pod:'B', name:'Yamila' },
-  ].forEach(p => {
-    const d = C.sdr[p.id] || { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
-    document.getElementById(p.cid).innerHTML = sdrCardHTML(p.name, p.pod, d);
-  });
-
-  [
-    { id:OID.ROCIO,   cid:'card-rocio',   pod:'A', name:'Rocío',   sk:'caRocio',   lk:'ca_rocio'   },
-    { id:OID.AGUSTIN, cid:'card-agustin', pod:'B', name:'Agustín', sk:'caAgustin', lk:'ca_agustin' },
-  ].forEach(p => {
-    const d = C.kam[p.id] || { n1:0,n2:0,n3:0,n4:0,n5:0,pts:0,count:0 };
-    document.getElementById(p.cid).innerHTML = kamCardHTML(p.name, p.pod, d, p.sk, p.lk);
-  });
-
-  const podAIndiv = ((C.sdr[OID.MARIA]?.pts||0) + (C.sdr[OID.ANDREA]?.pts||0)) / 2;
-  const podBIndiv = ((C.sdr[OID.CARLOS]?.pts||0) + (C.sdr[OID.YAMILA]?.pts||0)) / 2;
-  document.getElementById('podASubtitle').textContent = `SDR avg: ${podAIndiv.toFixed(1)}/${SDR_TARGET} pts`;
-  document.getElementById('podBSubtitle').textContent = `SDR avg: ${podBIndiv.toFixed(1)}/${SDR_TARGET} pts`;
-}
-
-function sdrCardHTML(name, pod, d) {
-  const p = d.pts / SDR_TARGET;
-  const color = p>=1?'#10B981':p>=0.5?'#F59E0B':'#EF4444';
-  const w = Math.min(p*100,100).toFixed(0);
-  return `
-    <div class="person-name">${name}</div>
-    <div class="person-role">SDR · Pod ${pod}</div>
-    <div class="kpi-lbl"><span>Leads calificadas</span><strong>${d.pts.toFixed(1)} / ${SDR_TARGET} pts</strong></div>
-    <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      ${badge(p)}
-      <div class="n-row">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>
-    </div>`;
-}
-
-function kamCardHTML(name, pod, d, sk, lk) {
-  const ncPct  = d.pts / KAM_NC_TARGET;
-  const caRaw  = S[sk] !== '' ? parseFloat(S[sk]) : null;
-  const caPct  = caRaw !== null ? caRaw / KAM_CA_TARGET : null;
-  const indiv  = caPct !== null ? 0.5*ncPct + 0.5*caPct : ncPct * 0.5;
-  const color  = ncPct>=1?'#10B981':ncPct>=0.5?'#F59E0B':'#EF4444';
-  const w      = Math.min(ncPct*100,100).toFixed(0);
-  return `
-    <div class="person-name">${name}</div>
-    <div class="person-role">KAM · Pod ${pod}</div>
-    <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${KAM_NC_TARGET} pts</strong></div>
-    <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${color}"></div></div>
-    <div class="sep"></div>
-    <div class="kpi-lbl" style="margin-bottom:4px;">
-      <span>% Cartera activa</span>
-      <span style="color:#F59E0B;font-size:10px;">✏ manual</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-      <input class="manual-input" type="number" min="0" max="100" placeholder="%"
-        value="${S[sk]}" oninput="saveCA('${lk}','${sk}',this.value)">
-      <span style="font-size:11px;color:var(--text-muted);">/ 80% meta</span>
-      ${caPct !== null ? badge(caPct) : '<span style="font-size:10px;color:#9CA3AF;">ingresá %</span>'}
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
-      <span style="font-size:11px;color:var(--text-muted);">Cumpl. individual:</span>
-      ${badge(indiv)}
-    </div>
-    <div class="n-row" style="margin-top:6px;">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>`;
-}
-
-function nPill(n, v) {
-  return v ? `<span class="n-pill hit">${n}×${v}</span>` : `<span class="n-pill">${n}</span>`;
+  const {cfg,team,sdrMap,kamMap,ca}=C;
+  function sdrHTML(p) {
+    const d=sdrMap[p.oid]||{n1:0,n2:0,n3:0,n4:0,n5:0,pts:0};
+    const t=p.target||cfg.SDR_TARGET, pp=d.pts/t;
+    const col=pp>=1?'#10B981':pp>=0.5?'#F59E0B':'#EF4444';
+    const w=Math.min(pp*100,100).toFixed(0);
+    return `<div class="person-card">
+      <div class="person-name">${p.name}</div><div class="person-role">SDR · Pod ${p.pod}</div>
+      <div class="kpi-lbl"><span>Leads calificadas</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
+      <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${col}"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        ${badge(pp)}
+        <div class="n-row">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>
+      </div></div>`;
+  }
+  function kamHTML(p) {
+    const d=kamMap[p.oid]||{n1:0,n2:0,n3:0,n4:0,n5:0,pts:0};
+    const t=p.target||cfg.KAM_NC_TARGET, ncPct=d.pts/t;
+    const caVal=parseFloat(ca[p.key]||'')||null;
+    const caPct=caVal!==null?(caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN)):null;
+    const col=ncPct>=1?'#10B981':ncPct>=0.5?'#F59E0B':'#EF4444';
+    const w=Math.min(ncPct*100,100).toFixed(0);
+    return `<div class="person-card">
+      <div class="person-name">${p.name}</div><div class="person-role">KAM · Pod ${p.pod}</div>
+      <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
+      <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${col}"></div></div>
+      <div class="sep"></div>
+      <div class="kpi-lbl"><span>% Cartera activa</span><span style="color:#6B7280;font-size:10px;">${caVal!==null?caVal+'%':'—'}</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+        ${caPct!==null?badge(caPct):'<span style="font-size:10px;color:#9CA3AF;">ingresá % en Admin</span>'}
+        <div class="n-row">${nPill('N1',d.n1)}${nPill('N2',d.n2)}${nPill('N3',d.n3)}${nPill('N4',d.n4)}${nPill('N5',d.n5)}</div>
+      </div></div>`;
+  }
+  const podA=team.filter(p=>p.pod==='A'&&p.active&&p.role!=='HOS');
+  const podB=team.filter(p=>p.pod==='B'&&p.active&&p.role!=='HOS');
+  document.getElementById('podABody').innerHTML=podA.map(p=>p.role==='SDR'?sdrHTML(p):kamHTML(p)).join('');
+  document.getElementById('podBBody').innerHTML=podB.map(p=>p.role==='SDR'?sdrHTML(p):kamHTML(p)).join('');
+  const sdrsA=team.filter(p=>p.role==='SDR'&&p.pod==='A'&&p.active);
+  const sdrsB=team.filter(p=>p.role==='SDR'&&p.pod==='B'&&p.active);
+  const pA=sdrsA.length?sdrsA.reduce((s,p)=>s+(sdrMap[p.oid]?.pts||0),0)/sdrsA.length:0;
+  const pB=sdrsB.length?sdrsB.reduce((s,p)=>s+(sdrMap[p.oid]?.pts||0),0)/sdrsB.length:0;
+  document.getElementById('podASubtitle').textContent=`SDR avg: ${pA.toFixed(1)} pts`;
+  document.getElementById('podBSubtitle').textContent=`SDR avg: ${pB.toFixed(1)} pts`;
 }
 
 function renderPodCompare(C) {
-  const maxO = Math.max(C.podAOut, C.podBOut, POD_TARGET, 1);
-  const maxD = Math.max(C.podADem, C.podBDem, COMP_MIN_DEMOS, 1);
-  document.getElementById('podCompareCard').innerHTML = `
+  const {cfg,podAOut,podBOut,podADem,podBDem}=C;
+  const maxO=Math.max(podAOut,podBOut,cfg.POD_TARGET,1), maxD=Math.max(podADem,podBDem,cfg.COMP_MIN_DEMOS,1);
+  function cRow(lbl,a,b,target,ca2,cb,maxV,showT) {
+    const wa=Math.min((a/maxV)*100,100).toFixed(0), wb=Math.min((b/maxV)*100,100).toFixed(0);
+    const fa=a>=target?`<strong style="color:${ca2}">${a}</strong>`:`<strong style="color:#EF4444">${a}</strong>`;
+    const fb=b>=target?`<strong style="color:${cb}">${b}</strong>`:`<strong style="color:#EF4444">${b}</strong>`;
+    const tLine=showT?`<div style="position:absolute;left:${Math.min((target/maxV)*100,100)}%;top:0;bottom:0;width:2px;background:#374151;opacity:.3;"></div>`:'';
+    return `<div class="compare-grid">
+      <div class="compare-lbl">${lbl}</div>
+      <div class="compare-bar-wrap"><div class="compare-track">${tLine}<div class="compare-fill" style="width:${wa}%;background:${ca2};"></div></div><div class="compare-num">${fa}</div></div>
+      <div class="compare-bar-wrap"><div class="compare-track">${tLine}<div class="compare-fill" style="width:${wb}%;background:${cb};"></div></div><div class="compare-num">${fb}</div></div>
+    </div>`;
+  }
+  document.getElementById('podCompareCard').innerHTML=`
     <div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;padding:4px 0 8px;border-bottom:2px solid var(--border);margin-bottom:4px;">
-      <div></div>
-      <div class="compare-head" style="color:var(--pod-a);">Pod A · María · Andrea · Rocío</div>
-      <div class="compare-head" style="color:var(--pod-b);">Pod B · Carlos · Yamila · Agustín</div>
+      <div></div><div class="compare-head" style="color:var(--pod-a);">Pod A</div><div class="compare-head" style="color:var(--pod-b);">Pod B</div>
     </div>
-    ${cmpRow('Clientes outbound', C.podAOut, C.podBOut, POD_TARGET,     '#3B82F6','#8B5CF6', maxO, true)}
-    ${cmpRow('Demos realizadas',  C.podADem, C.podBDem, COMP_MIN_DEMOS, '#3B82F6','#8B5CF6', maxD, false)}
+    ${cRow('Clientes outbound',podAOut,podBOut,cfg.POD_TARGET,'#3B82F6','#8B5CF6',maxO,true)}
+    ${cRow('Demos realizadas',podADem,podBDem,cfg.COMP_MIN_DEMOS,'#3B82F6','#8B5CF6',maxD,false)}
     <div style="margin-top:10px;display:flex;gap:20px;font-size:11px;color:var(--text-muted);flex-wrap:wrap;">
-      <span>Meta outbound: <strong>${POD_TARGET} clientes</strong></span>
-      <span>Mín. demos (bono comp.): <strong>${COMP_MIN_DEMOS}</strong></span>
-      <span>Mín. clientes (bono comp.): <strong>${COMP_MIN_CLI}</strong></span>
+      <span>Meta outbound: <strong>${cfg.POD_TARGET} clientes</strong></span>
+      <span>Mín. demos bono: <strong>${cfg.COMP_MIN_DEMOS}</strong></span>
+      <span>Mín. clientes bono: <strong>${cfg.COMP_MIN_CLI}</strong></span>
     </div>`;
 }
 
-function cmpRow(lbl, a, b, target, ca, cb, maxV, showTarget) {
-  const wa = Math.min((a/maxV)*100,100).toFixed(0);
-  const wb = Math.min((b/maxV)*100,100).toFixed(0);
-  const fa = a>=target?`<strong style="color:${ca}">${a}</strong>`:`<strong style="color:#EF4444">${a}</strong>`;
-  const fb = b>=target?`<strong style="color:${cb}">${b}</strong>`:`<strong style="color:#EF4444">${b}</strong>`;
-  const tLine = showTarget
-    ? `<div style="position:absolute;left:${Math.min((target/maxV)*100,100)}%;top:0;bottom:0;width:2px;background:#374151;opacity:.3;"></div>`
-    : '';
-  return `<div class="compare-grid">
-    <div class="compare-lbl">${lbl}</div>
-    <div class="compare-bar-wrap">
-      <div class="compare-track" style="position:relative;">${tLine}<div class="compare-fill" style="width:${wa}%;background:${ca};"></div></div>
-      <div class="compare-num">${fa}</div>
-    </div>
-    <div class="compare-bar-wrap">
-      <div class="compare-track" style="position:relative;">${tLine}<div class="compare-fill" style="width:${wb}%;background:${cb};"></div></div>
-      <div class="compare-num">${fb}</div>
-    </div>
-  </div>`;
-}
-
 function renderVarFinal(C) {
-  const podACumpl = Math.min(C.podAOut / POD_TARGET, 2);
-  const podBCumpl = Math.min(C.podBOut / POD_TARGET, 2);
-
-  const people = [
-    { key:'MARIA',   name:'María',   role:'SDR', pod:'A' },
-    { key:'ANDREA',  name:'Andrea',  role:'SDR', pod:'A' },
-    { key:'CARLOS',  name:'Carlos',  role:'SDR', pod:'B' },
-    { key:'YAMILA',  name:'Yamila',  role:'SDR', pod:'B' },
-    { key:'ROCIO',   name:'Rocío',   role:'KAM', pod:'A' },
-    { key:'AGUSTIN', name:'Agustín', role:'KAM', pod:'B' },
-  ];
-
-  const rows = people.map(p => {
-    const oid = OID[p.key];
-    let indivPct = 0;
-    if (p.role === 'SDR') {
-      indivPct = (C.sdr[oid]?.pts || 0) / SDR_TARGET;
-    } else {
-      const ncPct = (C.kam[oid]?.pts || 0) / KAM_NC_TARGET;
-      const sk    = p.key === 'ROCIO' ? 'caRocio' : 'caAgustin';
-      const caRaw = S[sk] !== '' ? parseFloat(S[sk]) : 0;
-      indivPct    = 0.5 * ncPct + 0.5 * (caRaw / KAM_CA_TARGET);
-    }
-    const podCumpl = p.pod === 'A' ? podACumpl : podBCumpl;
-    const combined = 0.7 * indivPct + 0.3 * podCumpl;
-    const bEq      = C.bonoEq          ? 0.10 : 0;
-    const bComp    = C.winner === p.pod ? 0.10 : 0;
-    const floor    = combined >= FLOOR;
-    const finalP   = floor ? combined + bEq + bComp : 0;
-    const pc       = p.pod === 'A' ? 'var(--pod-a)' : 'var(--pod-b)';
-
+  const {cfg,team,personFinal}=C;
+  const rows=team.filter(p=>p.role!=='HOS'&&p.active).map(p=>{
+    const f=personFinal(p), pc=p.pod==='A'?'var(--pod-a)':'var(--pod-b)';
+    const fc=f.finalPct>=1?'#059669':f.finalPct>=0.5?'#D97706':'#DC2626';
     return `<tr>
       <td><strong>${p.name}</strong></td>
       <td><span style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;font-weight:600;">${p.role}</span></td>
       <td><span style="font-size:12px;color:${pc};font-weight:700;">Pod ${p.pod}</span></td>
-      <td>${colorPct(indivPct)}</td>
-      <td>${colorPct(podCumpl)}</td>
-      <td style="color:${bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${bEq>0?'+10%':'—'}</td>
-      <td style="color:${bComp>0?'#059669':'#9CA3AF'};font-weight:600;">${bComp>0?'+10%':'—'}</td>
-      <td class="pct-big" style="color:${finalP>=0.8?'#059669':finalP>=0.5?'#D97706':'#DC2626'}">${pct(finalP)}</td>
-      <td>${floor ? '✅' : '<span title="Bajo el piso del 30%">❌ piso</span>'}</td>
+      <td>${colorPct(f.indivPct)}</td><td>${colorPct(f.podPct)}</td>
+      <td style="color:${f.bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${f.bEq>0?'+'+cfg.BONO_EQ_PP+'%':'—'}</td>
+      <td style="color:${f.bComp>0?'#059669':'#9CA3AF'};font-weight:600;">${f.bComp>0?'+'+cfg.BONO_COMP_PP+'%':'—'}</td>
+      <td class="pct-big" style="color:${fc}">${pct(f.finalPct)}</td>
+      <td>${f.meetsFloor?'<span style="color:#059669;">✅</span>':'<span title="Bajo el piso del '+cfg.FLOOR+'%">❌</span>'}</td>
     </tr>`;
   });
-
-  document.getElementById('varBody').innerHTML = rows.join('');
+  document.getElementById('varBody').innerHTML=rows.join('');
 }
 
-// ════════════════════════════════════════════════════
+function renderAdminHos() {
+  const C=compute();
+  const {cfg}=C;
+  const h=C.hosFinal();
+  const ca=getCA();
+  const team=getTeam();
+  const hos=team.find(p=>p.role==='HOS'&&p.active);
+  if (!h||!hos) {
+    document.getElementById('adminHos').innerHTML='<div class="card" style="color:#9CA3AF;font-size:13px;">No hay HoS activo en el equipo.</div>';
+    return;
+  }
+  const fc=h.finalPct>=1?'#059669':h.finalPct>=0.5?'#D97706':'#DC2626';
+  const caInputs=`<div class="param-row" style="margin-bottom:12px;">
+    <span class="param-lbl">% Cartera activa — ${hos.name}</span>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <input class="ca-input" type="number" min="0" max="200" step="1" placeholder="%" value="${ca['LAUTI']||''}"
+        oninput="saveCA('LAUTI',this.value)">
+      <span style="font-size:11px;color:var(--text-muted);">% cartera activa (input manual)</span>
+    </div>
+  </div>`;
+  document.getElementById('adminHos').innerHTML=`
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:16px;">👤 Head of Sales — Mi desempeño</div>
+      ${caInputs}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:12px;">Métricas individuales</div>
+          <div class="kpi-lbl"><span>Activaciones N-ponderadas (${cfg.HOS_ACT_PTS_W}%)</span><strong>${h.actPts.toFixed(1)} / ${h.kamTarget} pts</strong></div>
+          <div class="kpi-track"><div class="kpi-fill" style="width:${Math.min(h.actPtsPct*100,100).toFixed(0)}%;background:#3B82F6;"></div></div>
+          <div style="margin-bottom:10px;">${badge(h.actPtsPct)}<span style="font-size:10px;color:#9CA3AF;margin-left:6px;">Scope: ${cfg.HOS_KAMS_ONLY?'Solo KAMs':'Todo Valiu'}</span></div>
+          <div class="kpi-lbl"><span>Leads calificadas (${cfg.HOS_LEADS_W}%)</span><strong>${h.leadPts.toFixed(1)} / ${h.sdrTarget} pts</strong></div>
+          <div class="kpi-track"><div class="kpi-fill" style="width:${Math.min(h.leadsPct*100,100).toFixed(0)}%;background:#8B5CF6;"></div></div>
+          <div style="margin-bottom:10px;">${badge(h.leadsPct)}</div>
+          ${cfg.HOS_ACT_COUNT_W>0?`
+          <div class="kpi-lbl"><span>Cantidad activaciones (${cfg.HOS_ACT_COUNT_W}%)</span><strong>${h.actCount} / ${cfg.HOS_ACT_COUNT_TARGET}</strong></div>
+          <div class="kpi-track"><div class="kpi-fill" style="width:${Math.min(h.actCountPct*100,100).toFixed(0)}%;background:#10B981;"></div></div>
+          <div>${badge(h.actCountPct)}</div>`:''}
+          <div style="margin-top:12px;" class="kpi-lbl"><span>Cartera activa (${cfg.HOS_CA_W}%)</span><strong>${h.caVal>0?h.caVal+'%':'—'}</strong></div>
+          ${h.caVal>0?badge(h.caPct):'<span style="font-size:11px;color:#9CA3AF;">Ingresá el % arriba</span>'}
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-bottom:12px;">Resumen de compensación</div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;">Individual</span>${colorPct(h.indivPct)}</div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;margin:8px 0;">
+            <span style="font-size:12px;">Bono equipo ${h.bonoEqHos?'✅':'❌'} (mín. ${cfg.HOS_BONO_EQ_MIN} actvs.)</span>
+            <span style="color:${h.bEq>0?'#059669':'#9CA3AF'};font-weight:600;">${h.bEq>0?'+'+cfg.HOS_BONO_EQ_PP+'%':'—'}</span>
+          </div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+            <span style="font-size:13px;font-weight:700;">% Final</span>
+            <span style="font-size:24px;font-weight:800;color:${fc};">${pct(h.finalPct)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;">
+            <span style="font-size:12px;color:var(--text-muted);">Piso (${cfg.FLOOR}%)</span>
+            <span>${h.meetsFloor?'<span style="color:#059669;font-weight:600;">✅ Cumple</span>':'<span style="color:#DC2626;font-weight:600;">❌ No cumple</span>'}</span>
+          </div>
+          <div style="margin-top:16px;background:#F8FAFC;border-radius:8px;padding:12px;">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Pago variable estimado</div>
+            <div style="font-size:20px;font-weight:800;color:${h.meetsFloor?'#059669':'#DC2626'};">${money(h.meetsFloor?hos.varSalary*h.finalPct:0)}</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:3px;">Sobre salario var. ${money(hos.varSalary)}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// renderHoS removed from dashboard — content is now in Admin → Mi desempeño tab
+
+// ═══════════════════════════════════════════════
 // RENDER — SÁBANA
-// ════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 function renderSabana() {
-  const C = compute();
-  const mv = document.getElementById('monthPicker').value;
+  const C=compute(), {cfg,omap,alerts}=C;
+  const ovr=getOverrides(), admin=isAdmin();
+  const kamExitIds=new Set(S.kamExit.map(d=>String(d.id)));
 
-  // ── Leads calificadas
-  document.getElementById('leadsCount').textContent = S.leads.length;
-  const leadsRows = S.leads.map(d => {
-    const p   = d.properties;
-    const sdr = p.sdr__que_agendo_;
-    const vol = p.promedio___volumen_operado_al_mes__detallado_ || '—';
-    const pts = N_MAP[vol] || 0;
-    const nl  = N_LABEL[vol] || '—';
-    const dt  = p.hs_v2_date_exited_965485717
-      ? p.hs_v2_date_exited_965485717.slice(0,10) : '—';
-    const pip = PIPELINE_NAMES[p.pipeline] || p.pipeline || '—';
-    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : null;
-    return `<tr>
-      <td style="font-weight:600;">${p.dealname || '—'}</td>
-      <td>${sdrName
-        ? `<span class="badge badge-blue">${sdrName}</span>`
-        : '<span class="no-sdr">Sin SDR</span>'}</td>
-      <td style="font-size:11px;color:var(--text-muted);">${pip}</td>
-      <td style="font-size:11px;">${dt}</td>
-      <td><span style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</span></td>
-      <td>${pts > 0
-        ? `<strong style="color:#1D4ED8;">${nl} · ${pts}pt</strong>`
-        : '<span style="color:#9CA3AF;">—</span>'}</td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
-  document.getElementById('sabanaLeadsBody').innerHTML = leadsRows;
-
-  // ── Nuevos clientes activados
-  document.getElementById('activationsCount').textContent = S.activated.length;
-  const actIds = new Set(S.kamExit.map(d => String(d.id)));
-  const actRows = S.activated.map(d => {
-    const p    = d.properties;
-    const kam  = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
-    const sdr  = p.sdr__que_agendo_;
-    const sdrName = sdr ? (OWNER_NAME[sdr] || `ID ${sdr}`) : '—';
-    const vol  = p.promedio___volumen_operado_al_mes__detallado_ || '—';
-    const pts  = N_MAP[vol] || 0;
-    const nl   = N_LABEL[vol] || '—';
-    const fa   = p.fecha_activacion || '—';
-    const src  = p.fuente_principal_de_lead || '—';
-    const hasExit = actIds.has(String(d.id));
-    const ctrl = hasExit
-      ? '<span style="color:#059669;font-weight:600;">✓ doble control</span>'
-      : '<span style="color:#9CA3AF;font-size:11px;">solo fecha act.</span>';
-    return `<tr>
-      <td style="font-weight:600;">${p.dealname || '—'}</td>
-      <td><span class="badge badge-green">${kam}</span></td>
+  document.getElementById('activationsCount').textContent=S.allActivated.length;
+  const actRows=S.allActivated.map(d=>{
+    const p=d.properties;
+    const kamName=omap[p.hubspot_ownerid];
+    const kamCell=kamName?`<span class="badge badge-green">${kamName}</span>`:`<span style="font-size:10px;color:#9CA3AF;">ID ${p.hubspot_owner_id||'—'}</span>`;
+    const sdrName=p.sdr__que_agendo_?(omap[p.sdr__que_agendo_]||`ID ${p.sdr__que_agendo_}`):'—';
+    const nl=nLevel(p.promedio___volumen_operado_al_mes__detallado_);
+    const ctrl=kamExitIds.has(String(d.id))?'<span style="color:#059669;font-weight:600;font-size:11px;">✓ doble ctrl</span>':'<span style="color:#9CA3AF;font-size:11px;">—</span>';
+    const isOvr=!!ovr[String(d.id)];
+    return `<tr${isOvr?' style="background:#FFFBEB;"':''}>
+      <td>${dealLink(d.id,p.dealname,cfg)}${isOvr?' <span style="font-size:9px;background:#FEF3C7;color:#92400E;padding:1px 4px;border-radius:3px;font-weight:600;">override</span>':''}</td>
+      <td>${kamCell}</td>
       <td style="font-size:11px;color:var(--text-muted);">${sdrName}</td>
-      <td style="font-size:11px;color:var(--text-muted);">${src}</td>
-      <td style="font-size:11px;">${fa}</td>
-      <td style="font-size:11px;">${vol !== '—' ? vol : '<span style="color:#9CA3AF;">sin dato</span>'}</td>
-      <td>${pts > 0
-        ? `<strong style="color:#059669;">${nl} · ${pts}pt</strong>`
-        : '<span style="color:#9CA3AF;">—</span>'}</td>
-      <td>${ctrl}</td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="8" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
-  document.getElementById('sabanaActBody').innerHTML = actRows;
+      <td style="font-size:11px;color:var(--text-muted);">${p.fuente_principal_de_lead||'—'}</td>
+      <td style="font-size:11px;">${p.fecha_activacion||'—'}</td>
+      <td style="font-size:11px;">${nl?p.promedio___volumen_operado_al_mes__detallado_:'<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td>${nl?`<strong style="color:#059669;">${nl.n} · ${nl.w}pt</strong>`:'<span style="color:#9CA3AF;">—</span>'}</td>
+      <td>${ctrl}</td></tr>`;
+  }).join('')||'<tr><td colspan="8" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
+  document.getElementById('sabanaActBody').innerHTML=actRows;
 
-  // ── Alertas doble control
-  if (C.alerts.length > 0) {
-    document.getElementById('alertSection').style.display = '';
-    document.getElementById('alertsCount').textContent = C.alerts.length;
-    const alertRows = C.alerts.map(d => {
-      const p   = d.properties;
-      const kam = OWNER_NAME[p.hubspot_owner_id] || `ID ${p.hubspot_owner_id}`;
-      const dt  = p.hs_v2_date_exited_29556535
-        ? p.hs_v2_date_exited_29556535.slice(0,10) : '—';
-      const fa  = p.fecha_activacion || '<span style="color:#EF4444;">vacía</span>';
+  document.getElementById('leadsCount').textContent=S.leads.length;
+  const leadsRows=S.leads.map(d=>{
+    const p=d.properties;
+    const sdrName=p.sdr__que_agendo_?(omap[p.sdr__que_agendo_]||`ID ${p.sdr__que_agendo_}`):null;
+    const nl=nLevel(p.promedio___volumen_operado_al_mes__detallado_);
+    const dt=p.hs_v2_date_exited_965485717?p.hs_v2_date_exited_965485717.slice(0,10):'—';
+    return `<tr>
+      <td>${dealLink(d.id,p.dealname,cfg)}</td>
+      <td>${sdrName?`<span class="badge badge-blue">${sdrName}</span>`:'<span class="no-sdr">Sin SDR</span>'}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${PIPELINE_NAMES[p.pipeline]||p.pipeline||'—'}</td>
+      <td style="font-size:11px;">${dt}</td>
+      <td style="font-size:11px;">${nl?p.promedio___volumen_operado_al_mes__detallado_:'<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td>${nl?`<strong style="color:#1D4ED8;">${nl.n} · ${nl.w}pt</strong>`:'<span style="color:#9CA3AF;">—</span>'}</td></tr>`;
+  }).join('')||'<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos</td></tr>';
+  document.getElementById('sabanaLeadsBody').innerHTML=leadsRows;
+
+  if (alerts.length>0) {
+    document.getElementById('alertSection').classList.remove('hidden');
+    document.getElementById('alertsCount').textContent=alerts.length;
+    const alertRows=alerts.map(d=>{
+      const p=d.properties;
+      const kam=omap[p.hubspot_owner_id]||`ID ${p.hubspot_owner_id}`;
+      const dt=p.hs_v2_date_exited_29556535?p.hs_v2_date_exited_29556535.slice(0,10):'—';
+      const fa=p.fecha_activacion||'—';
+      const esc=(s)=>s.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      const action=admin
+        ?`<button class="btn btn-sm btn-primary" onclick="openOverrideModal('${d.id}','${esc(p.dealname||'')}','${fa}')">Resolver →</button>`
+        :`<span style="color:#92400E;font-size:11px;font-weight:600;">Verificar en HubSpot</span>`;
       return `<tr style="background:#FFFBEB;">
-        <td style="font-weight:600;">${p.dealname || '—'}</td>
+        <td>${dealLink(d.id,p.dealname,cfg)}</td>
         <td><span class="badge badge-amber">${kam}</span></td>
         <td style="font-size:11px;">${dt}</td>
         <td style="font-size:11px;">${fa}</td>
-        <td style="font-size:11px;color:#92400E;font-weight:600;">Verificar y completar fecha_activacion en HubSpot</td>
-      </tr>`;
+        <td>${action}</td></tr>`;
     }).join('');
-    document.getElementById('sabanaAlertBody').innerHTML = alertRows;
-  } else {
-    document.getElementById('alertSection').style.display = 'none';
+    document.getElementById('sabanaAlertBody').innerHTML=alertRows;
+  } else { document.getElementById('alertSection').classList.add('hidden'); }
+  document.getElementById('footer2').textContent='Última actualización: '+new Date().toLocaleString('es');
+}
+
+// ═══════════════════════════════════════════════
+// OVERRIDE MODAL
+// ═══════════════════════════════════════════════
+function openOverrideModal(dealId, dealName, fechaAct) {
+  const mv=document.getElementById('monthPicker').value;
+  const opts=[];
+  const now=new Date();
+  for (let i=-4;i<=2;i++) {
+    const d=new Date(now.getFullYear(),now.getMonth()+i,1);
+    const val=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const lbl=d.toLocaleString('es',{month:'long',year:'numeric'});
+    opts.push(`<option value="${val}"${val===mv?' selected':''}>${lbl}</option>`);
+  }
+  document.getElementById('overrideModalContent').innerHTML=`
+    <div class="modal-title">📅 Resolver deal</div>
+    <p style="font-size:13px;font-weight:600;margin-bottom:6px;">${dealName}</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Fecha activación original: ${fechaAct}</p>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px;">¿En qué mes contar?</div>
+      <select id="ovrMonthSel" style="width:100%;padding:8px 10px;border:1px solid #D1D5DB;border-radius:8px;font-size:13px;">${opts.join('')}</select>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary btn-sm" onclick="confirmOverride('${dealId}','${dealName.replace(/'/g,"\\'")}','${fechaAct}',false)">Asignar mes</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmOverride('${dealId}','${dealName.replace(/'/g,"\\'")}','${fechaAct}',true)">Descartar deal</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('overrideModal')">Cancelar</button>
+    </div>`;
+  document.getElementById('overrideModal').classList.remove('hidden');
+}
+function confirmOverride(dealId, dealName, fechaAct, discard) {
+  const month=document.getElementById('ovrMonthSel')?.value||document.getElementById('monthPicker').value;
+  const ovr=getOverrides();
+  const deal=[...S.allActivated,...S.kamExit].find(d=>String(d.id)===String(dealId));
+  ovr[String(dealId)]={
+    dealId:String(dealId), dealName, originalFecha:fechaAct,
+    assignedMonth:discard?'__discarded__':month, discarded:discard,
+    resolvedAt:new Date().toISOString(),
+    properties:deal?deal.properties:{}
+  };
+  saveOverrides(ovr); closeModal('overrideModal'); loadData();
+}
+
+// ═══════════════════════════════════════════════
+// RENDER — ADMIN
+// ═══════════════════════════════════════════════
+function renderAdmin() {
+  renderAdminParams(); renderAdminTeam(); renderAdminOverrides(); renderAdminHos(); renderAdminPayment();
+}
+
+function renderAdminParams() {
+  const cfg=getCfg();
+  function nRow(lbl,key,step,unit) {
+    return `<div class="param-row"><span class="param-lbl">${lbl}</span>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input class="param-input" type="number" step="${step||1}" value="${cfg[key]}" onchange="updateCfgKey('${key}',this.value)">
+        <span style="font-size:11px;color:var(--text-muted);">${unit||''}</span>
+      </div></div>`;
+  }
+  function bRow(lbl,key) {
+    return `<div class="param-row"><span class="param-lbl">${lbl}</span>
+      <input type="checkbox" ${cfg[key]?'checked':''} onchange="updateCfgKey('${key}',this.checked)"></div>`;
+  }
+  function sectionHdr(label) {
+    return `<div style="grid-column:1/-1;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#475569;padding:4px 0 2px;border-bottom:2px solid #E2E8F0;margin-bottom:4px;">${label}</div>`;
+  }
+  document.getElementById('adminParams').innerHTML=`
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:16px;">⚙️ Parámetros del sistema</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        ${sectionHdr('🎯 Targets individuales')}
+        <div class="param-group">
+          <div class="param-group-title">SDR — Target</div>
+          ${nRow('Puntos N-ponderados','SDR_TARGET',0.5,'pts')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">KAM — Target</div>
+          ${nRow('Nuevos clientes (pts)','KAM_NC_TARGET',0.5,'pts')}
+          ${nRow('Cartera activa objetivo','KAM_CA_TARGET',1,'%')}
+          ${nRow('Cartera activa mínimo unlock','KAM_CA_MIN',1,'%')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Pod — Target outbound</div>
+          ${nRow('Clientes outbound por pod','POD_TARGET',1,'cli')}
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        ${sectionHdr('🏅 Bonos del equipo')}
+        <div class="param-group">
+          <div class="param-group-title">Bono Equipo</div>
+          ${nRow('Activaciones mínimas','BONO_EQ_MIN',1,'cuentas')}
+          ${nRow('Premio por persona','BONO_EQ_PP',1,'pp')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Bono Competencia (Pod vs Pod)</div>
+          ${nRow('Clientes mínimos para participar','COMP_MIN_CLI',1,'cli')}
+          ${nRow('Demos mínimas para participar','COMP_MIN_DEMOS',1,'demos')}
+          ${nRow('Premio al pod ganador','BONO_COMP_PP',1,'pp')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Fórmula de compensación</div>
+          ${nRow('Peso componente individual','INDIV_W',1,'%')}
+          ${nRow('Peso componente pod','POD_W',1,'%')}
+          ${nRow('Piso mínimo de pago','FLOOR',1,'%')}
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        ${sectionHdr('👤 Head of Sales — Esquema de incentivos')}
+        <div class="param-group">
+          <div class="param-group-title">Pesos de métricas</div>
+          ${nRow('Activaciones N-ponderadas','HOS_ACT_PTS_W',1,'%')}
+          ${nRow('Cantidad de activaciones','HOS_ACT_COUNT_W',1,'%')}
+          ${nRow('Cartera activa','HOS_CA_W',1,'%')}
+          ${nRow('Leads calificadas','HOS_LEADS_W',1,'%')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Targets</div>
+          ${nRow('Target actvs. N-pond. (= suma KAMs)','KAM_NC_TARGET',0.5,'pts')}
+          ${nRow('Target cantidad activaciones','HOS_ACT_COUNT_TARGET',1,'cuentas')}
+          ${nRow('Cartera activa objetivo','KAM_CA_TARGET',1,'%')}
+          ${nRow('Cartera activa mínimo unlock','KAM_CA_MIN',1,'%')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Bono equipo &amp; Scope</div>
+          ${nRow('Activaciones mínimas para bono','HOS_BONO_EQ_MIN',1,'cuentas')}
+          ${nRow('Premio bono equipo HoS','HOS_BONO_EQ_PP',1,'pp')}
+          ${bRow('Considerar solo negocios KAMs','HOS_KAMS_ONLY')}
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        ${sectionHdr('🔧 Sistema')}
+        <div class="param-group">
+          <div class="param-group-title">HubSpot</div>
+          <div class="param-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
+            <span class="param-lbl">Portal ID</span>
+            <input class="param-input param-input-wide" type="text" value="${cfg.HUBSPOT_PORTAL_ID||''}" placeholder="Ej: 12345678"
+              onchange="updateCfgKey('HUBSPOT_PORTAL_ID',this.value)">
+            <span style="font-size:10px;color:#9CA3AF;">Settings → Account → Account ID</span>
+          </div>
+        </div>
+        <div class="param-group" style="grid-column:span 2;">
+          <div class="param-group-title">Fuentes no-outbound (no cuentan para pod)</div>
+          <div class="param-row">
+            <input class="param-input" style="width:100%;text-align:left;" type="text" value="${cfg.NON_OUTBOUND||''}"
+              placeholder="Separados por coma" onchange="updateCfgKey('NON_OUTBOUND',this.value)">
+          </div>
+          <div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Separar con comas. Ej: Referidos por Clientes,Friends &amp; Families</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:#9CA3AF;">Los cambios se aplican al instante y se guardan localmente en este navegador.</div>
+    </div>`;
+}
+
+function updateCfgKey(key,val) {
+  const cfg=getCfg();
+  if (typeof DEFAULT_CFG[key]==='boolean') cfg[key]=!!val;
+  else if (typeof DEFAULT_CFG[key]==='number') cfg[key]=parseFloat(val)||0;
+  else cfg[key]=val;
+  saveCfg(cfg);
+  if (S.allActivated.length||S.leads.length) { render(); renderSabana(); renderAdmin(); }
+}
+
+function renderAdminTeam() {
+  const team=getTeam();
+  const rows=team.map((p,i)=>{
+    const hasBonoExtra=p.bonoExtra>0;
+    const bonoExtraCell=`
+      <td>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+          <input type="checkbox" ${hasBonoExtra?'checked':''} onchange="toggleBonoExtra(${i},this.checked)">
+          <span style="font-size:11px;color:${hasBonoExtra?'var(--text)':'var(--text-muted)'};">
+            ${hasBonoExtra?`<input class="team-input" type="number" value="${p.bonoExtra}" style="width:70px;" onclick="event.stopPropagation()" onchange="updateTeamField(${i},'bonoExtra',parseFloat(this.value)||0)"> $`:'—'}
+          </span>
+        </label>
+      </td>`;
+    return `<tr>
+      <td><input class="team-input" value="${p.name}" onchange="updateTeamField(${i},'name',this.value)"></td>
+      <td><select class="team-input" onchange="updateTeamField(${i},'role',this.value)">
+        ${['SDR','KAM','HOS'].map(r=>`<option value="${r}"${p.role===r?' selected':''}>${r}</option>`).join('')}
+      </select></td>
+      <td><select class="team-input" onchange="updateTeamField(${i},'pod',this.value)">
+        ${['A','B',''].map(pd=>`<option value="${pd||''}"${(p.pod||'')===(pd||'')?' selected':''}>${pd||'—'}</option>`).join('')}
+      </select></td>
+      <td><input class="team-input" value="${p.oid||''}" placeholder="Owner ID" onchange="updateTeamField(${i},'oid',this.value)"></td>
+      <td><input class="team-input" type="number" step="0.5" value="${p.target||0}" style="width:60px;" onchange="updateTeamField(${i},'target',parseFloat(this.value)||0)"></td>
+      <td><input class="team-input" type="number" value="${p.varSalary||0}" style="width:80px;" onchange="updateTeamField(${i},'varSalary',parseFloat(this.value)||0)"></td>
+      ${bonoExtraCell}
+      <td style="text-align:center;"><input type="checkbox" ${p.active?'checked':''} onchange="updateTeamField(${i},'active',this.checked)"></td>
+      <td><button class="btn btn-sm btn-danger" onclick="removeTeamMember(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('adminTeam').innerHTML=`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span style="font-size:13px;font-weight:700;">👥 Configuración del equipo</span>
+        <button class="btn btn-success btn-sm" onclick="addTeamMember()">+ Añadir miembro</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="team-table">
+          <thead><tr><th>Nombre</th><th>Rol</th><th>Pod</th><th>Owner ID (HubSpot)</th><th>Target</th><th>Salario var. ($)</th><th>Bono extra</th><th>Activo</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:#9CA3AF;">Para encontrar el Owner ID: HubSpot → Configuración → Usuarios y equipos → clic en el usuario → ver URL. · El <strong>bono extra</strong> es excepcional (garantías, acuerdos puntuales): habilitá solo cuando corresponda.</div>
+    </div>`;
+}
+function updateTeamField(idx,field,val) {
+  const team=getTeam(); team[idx][field]=val; saveTeam(team);
+  if (S.allActivated.length||S.leads.length) { render(); renderSabana(); renderAdmin(); }
+}
+function removeTeamMember(idx) {
+  if (!confirm('¿Eliminar este miembro del equipo?')) return;
+  const team=getTeam(); team.splice(idx,1); saveTeam(team);
+  renderAdmin(); if(S.allActivated.length||S.leads.length){render();renderSabana();}
+}
+function addTeamMember() {
+  const team=getTeam();
+  team.push({key:`M${Date.now()}`,name:'Nuevo miembro',role:'SDR',pod:'A',oid:'',active:true,target:7,varSalary:800,bonoExtra:0});
+  saveTeam(team); renderAdmin();
+}
+function toggleBonoExtra(idx, enabled) {
+  const team=getTeam();
+  team[idx].bonoExtra = enabled ? (team[idx].bonoExtra||500) : 0;
+  saveTeam(team); renderAdmin();
+  if(S.allActivated.length||S.leads.length){render();renderSabana();}
+}
+
+function renderAdminOverrides() {
+  const ovr=getOverrides(), bonoOvr=getBonoOvr();
+  const allActive=getTeam().filter(p=>p.active);
+  const teamNoHos=allActive.filter(p=>p.role!=='HOS');
+  const hosP=allActive.find(p=>p.role==='HOS');
+  const entries=Object.values(ovr);
+
+  const bonoRows=teamNoHos.map(p=>{
+    const bo=bonoOvr[p.key]||{};
+    return `<tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;">${p.role}</span></td>
+      <td style="text-align:center;"><input type="checkbox" ${bo.forceBonoEq?'checked':''} onchange="toggleBonoOvr('${p.key}','forceBonoEq',this.checked)" title="Asignar bono equipo aunque no se alcance el mínimo"></td>
+      <td style="text-align:center;"><input type="checkbox" ${bo.forceBonoComp?'checked':''} onchange="toggleBonoOvr('${p.key}','forceBonoComp',this.checked)" title="Asignar bono competencia de forma unilateral"></td>
+      <td style="text-align:center;"><input type="checkbox" ${bo.forceFloor?'checked':''} onchange="toggleBonoOvr('${p.key}','forceFloor',this.checked)" title="Ignorar el piso de 30% y pagar igual"></td>
+      <td>—</td>
+    </tr>`;
+  }).join('');
+
+  const hosBoRow=hosP ? (()=>{
+    const bo=bonoOvr[hosP.key]||{};
+    return `<tr style="background:#F0FDF4;">
+      <td><strong>${hosP.name}</strong></td>
+      <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:4px;">HOS</span></td>
+      <td style="text-align:center;">—</td>
+      <td style="text-align:center;">—</td>
+      <td style="text-align:center;"><input type="checkbox" ${bo.forceFloor?'checked':''} onchange="toggleBonoOvr('${hosP.key}','forceFloor',this.checked)" title="Ignorar el piso y pagar igual"></td>
+      <td style="text-align:center;"><input type="checkbox" ${bo.forceBonoEq?'checked':''} onchange="toggleBonoOvr('${hosP.key}','forceBonoEq',this.checked)" title="Forzar bono equipo HoS"></td>
+    </tr>`;
+  })() : '';
+
+  const dealRows=entries.length?entries.map(o=>`<tr>
+    <td style="font-weight:600;font-size:12px;">${o.dealName}</td>
+    <td style="font-size:11px;">${o.originalFecha||'—'}</td>
+    <td><span class="${o.discarded?'badge badge-red':'badge badge-amber'}">${o.discarded?'Descartado':o.assignedMonth}</span></td>
+    <td style="font-size:11px;color:var(--text-muted);">${o.resolvedAt?o.resolvedAt.slice(0,10):'—'}</td>
+    <td><button class="btn btn-sm btn-ghost" onclick="removeOverride('${o.dealId}')">✕ Quitar</button></td>
+  </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:#9CA3AF;padding:16px;">Sin overrides registrados</td></tr>';
+  document.getElementById('adminOverrides').innerHTML=`
+    <div class="card" style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px;">🎯 Overrides de bonos por persona</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Forzá bonos o el piso de pago de forma unilateral para casos excepcionales. Hover sobre cada checkbox para ver qué hace.</p>
+      <table class="override-table">
+        <thead><tr><th>Nombre</th><th>Rol</th><th>Forzar bono equipo</th><th>Forzar bono comp.</th><th>Forzar pago (ignorar piso)</th><th>HoS: forzar bono eq.</th></tr></thead>
+        <tbody>${bonoRows}${hosBoRow}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;">📅 Historial de deals reasignados / descartados</div>
+      <table class="override-table">
+        <thead><tr><th>Deal</th><th>Fecha act. original</th><th>Mes asignado</th><th>Fecha resolución</th><th></th></tr></thead>
+        <tbody>${dealRows}</tbody>
+      </table>
+    </div>`;
+}
+function toggleBonoOvr(key,field,val) {
+  const bo=getBonoOvr(); if(!bo[key])bo[key]={};
+  bo[key][field]=val; saveBonoOvr(bo);
+  if(S.allActivated.length||S.leads.length){render();renderSabana();renderAdmin();}
+}
+function removeOverride(dealId) {
+  const ovr=getOverrides(); delete ovr[String(dealId)]; saveOverrides(ovr);
+  renderAdmin(); loadData();
+}
+
+function renderAdminPayment() {
+  const C=compute(), {cfg,team,personFinal,hosFinal,ca}=C;
+  const active=team.filter(p=>p.role!=='HOS'&&p.active);
+  const hos=team.find(p=>p.role==='HOS'&&p.active);
+  const h=hosFinal();
+  const mv=document.getElementById('monthPicker').value;
+  const [y,m2]=mv.split('-').map(Number);
+  const mesLabel=new Date(y,m2-1).toLocaleString('es',{month:'long',year:'numeric'});
+
+  // CA inputs (KAMs only — HoS CA input is in Mi desempeño tab)
+  const kamsOnly=active.filter(p=>p.role==='KAM');
+  const caInputs=kamsOnly.map(p=>`
+    <div class="param-row">
+      <span class="param-lbl">${p.name} (KAM)</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input class="ca-input" type="number" min="0" max="200" step="1" placeholder="%" value="${ca[p.key]||''}"
+          oninput="saveCA('${p.key}',this.value)">
+        <span style="font-size:11px;color:var(--text-muted);">% cartera activa</span>
+      </div>
+    </div>`).join('');
+
+  // Payment rows
+  const rows=active.map(p=>{
+    const f=personFinal(p);
+    const earned=f.meetsFloor?p.varSalary*f.finalPct:0;
+    const total=earned+(p.bonoExtra||0);
+    const fc=f.finalPct>=1?'#059669':f.finalPct>=0.5?'#D97706':'#DC2626';
+    return `<tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span style="font-size:11px;background:#F3F4F6;padding:2px 6px;border-radius:4px;">${p.role}</span></td>
+      <td>${colorPct(f.indivPct)}</td><td>${colorPct(f.podPct)}</td>
+      <td class="pct-big" style="color:${fc}">${pct(f.finalPct)}</td>
+      <td>${f.meetsFloor?'✅':'<span title="Bajo el piso">❌ '+pct(f.combined)+'</span>'}</td>
+      <td style="font-weight:600;">${money(p.varSalary)}</td>
+      <td class="money-big" style="color:${earned>0?'#059669':'#DC2626'};">${money(earned)}</td>
+      <td style="color:#374151;font-weight:600;">${p.bonoExtra>0?money(p.bonoExtra):'—'}</td>
+      <td class="money-big" style="color:#059669;">${money(total)}</td>
+    </tr>`;
+  });
+
+  if (h&&hos) {
+    const earned=h.meetsFloor?hos.varSalary*h.finalPct:0;
+    const total=earned+(hos.bonoExtra||0);
+    const fc=h.finalPct>=1?'#059669':h.finalPct>=0.5?'#D97706':'#DC2626';
+    rows.push(`<tr style="background:#F0FDF4;">
+      <td><strong>${hos.name}</strong></td>
+      <td><span style="font-size:11px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:4px;">HOS</span></td>
+      <td>${colorPct(h.indivPct)}</td><td><span style="color:#9CA3AF;font-size:11px;">—</span></td>
+      <td class="pct-big" style="color:${fc}">${pct(h.finalPct)}</td>
+      <td>${h.meetsFloor?'✅':'❌ '+pct(h.indivPct)}</td>
+      <td style="font-weight:600;">${money(hos.varSalary)}</td>
+      <td class="money-big" style="color:${earned>0?'#059669':'#DC2626'};">${money(earned)}</td>
+      <td style="color:#374151;font-weight:600;">${hos.bonoExtra>0?money(hos.bonoExtra):'—'}</td>
+      <td class="money-big" style="color:#059669;">${money(total)}</td>
+    </tr>`);
   }
 
-  document.getElementById('footer2').textContent =
-    'Última actualización: ' + new Date().toLocaleString('es');
+  let totalNomina=0;
+  active.forEach(p=>{ const f=personFinal(p); totalNomina+=(f.meetsFloor?p.varSalary*f.finalPct:0)+(p.bonoExtra||0); });
+  if (h&&hos) totalNomina+=(h.meetsFloor?hos.varSalary*h.finalPct:0)+(hos.bonoExtra||0);
+
+  document.getElementById('adminPayment').innerHTML=`
+    <div class="card" style="margin-bottom:16px;">
+      <div class="param-group-title" style="margin-bottom:12px;">📊 Inputs — % Cartera activa (KAMs)</div>
+      <div style="font-size:11px;color:#9CA3AF;margin-bottom:8px;">El % CA del HoS se ingresa en la pestaña "Mi desempeño".</div>
+      ${caInputs||'<p style="color:#9CA3AF;font-size:12px;">No hay KAMs activos en el equipo.</p>'}
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <span style="font-size:14px;font-weight:700;">💰 Cierre de mes — ${mesLabel}</span>
+        <span style="font-size:13px;color:var(--text-muted);">Nómina variable total: <strong style="color:#059669;font-size:16px;">${money(totalNomina)}</strong></span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="payment-table">
+          <thead><tr>
+            <th>Nombre</th><th>Rol</th><th>Individual</th><th>Pod</th>
+            <th>% Final</th><th>Piso</th>
+            <th>Salario var.</th><th>$ Variable</th><th>Bono extra</th><th>TOTAL</th>
+          </tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:#9CA3AF;">
+        Los salarios variables y bonos extra son editables en la pestaña Equipo. La columna Piso muestra el % combinado cuando no se alcanza el mínimo.
+      </div>
+    </div>`;
 }
 
-// ════════════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════════════
-function badge(p) {
-  const lbl = pct(p);
-  if (p >= 1)   return `<span class="badge badge-green">${lbl}</span>`;
-  if (p >= 0.5) return `<span class="badge badge-amber">${lbl}</span>`;
-  if (p >= 0.3) return `<span class="badge badge-amber">${lbl}</span>`;
-  return `<span class="badge badge-red">${lbl}</span>`;
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function setLoading(show,msg) {
+  document.getElementById('loadingOverlay').classList.toggle('hidden',!show);
+  if (msg) document.getElementById('loadingText').textContent=msg;
 }
-function colorPct(p) {
-  const c = p>=1?'#059669':p>=0.5?'#D97706':'#DC2626';
-  return `<span style="font-weight:600;color:${c}">${pct(p)}</span>`;
-}
-function pct(p) { return (p*100).toFixed(0)+'%'; }
-
-function saveCA(lk, sk, v) {
-  localStorage.setItem(lk, v);
-  S[sk] = v;
-  if (S.activated.length || S.leads.length) { render(); renderSabana(); }
-}
-
-function setLoading(show, msg) {
-  document.getElementById('loadingOverlay').className = 'loading-overlay' + (show ? '' : ' hidden');
-  if (msg) document.getElementById('loadingText').textContent = msg;
-}
-
 function setError(msg) {
-  const el = document.getElementById('errorBanner');
-  if (msg) {
-    el.textContent = '⚠️ ' + msg;
-    el.className = 'error-banner show';
-    document.getElementById('mainContent').style.display = 'block';
-  } else {
-    el.className = 'error-banner';
-  }
+  const el=document.getElementById('errorBanner');
+  if (msg) { el.textContent='⚠️ '+msg; el.className='error-banner show'; document.getElementById('mainContent').style.display='block'; }
+  else { el.className='error-banner'; }
 }
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  const now=new Date();
+  document.getElementById('monthPicker').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  refreshAdminUI();
+  loadData();
+});
 </script>
 </body>
 </html>
