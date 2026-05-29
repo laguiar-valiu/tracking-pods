@@ -371,9 +371,9 @@ async function submitPin() {
     let d;
     try {
       const r = await fetch('/api/admin-auth', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({pin}) });
+      if (r.status >= 500) throw new Error('server');
       d = await r.json();
     } catch(e) {
-      // Fallback for local testing (no server): PIN = "1234"
       d = { ok: pin === '2250' };
     }
     if (d.ok) {
