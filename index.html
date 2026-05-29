@@ -297,13 +297,15 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 // N-LEVEL MAPPING  (new HubSpot string values)
 // ═══════════════════════════════════════════════
 const N_STRINGS = {
-  // Valores actuales en HubSpot
-  'Entre $25,000 y $50,000 USD':   { w:0.25, n:'N1' },
-  'Entre $50,000 y $100,000 USD':  { w:0.5,  n:'N2' },
-  'Entre $100,001 y $200,000 USD': { w:1.0,  n:'N3' },
-  'Entre $200,001 y $500,000 USD': { w:1.5,  n:'N4' },
-  'Mayor a $500,000 USD':          { w:2.0,  n:'N5' },
-  // Valores legacy (compatibilidad)
+  // Valores HubSpot → N-levels (N1:$20k-$50k, N2:$50k-$160k, N3:$160k-$300k, N4:$300k-$500k, N5:>$500k)
+  'Menor a $25,000 USD':           { w:0.25, n:'N1' },  // $20k-$25k → bajo N1
+  'Entre $25,000 y $50,000 USD':   { w:0.25, n:'N1' },  // N1
+  'Entre $50,000 y $100,000 USD':  { w:0.5,  n:'N2' },  // N2
+  'Entre $100,001 y $200,000 USD': { w:0.5,  n:'N2' },  // midpoint $150k → N2
+  'Entre $200,001 y $500,000 USD': { w:1.5,  n:'N4' },  // N4
+  'Mayor a $500,000 USD':          { w:2.0,  n:'N5' },  // N5
+  // Menor a $20,000 USD → no califica (no aparece aquí → retorna null)
+  // Legacy
   '(N1) $20,000 - $50,000 USD':   { w:0.25, n:'N1' },
   '(N2) $50,001 - $160,000 USD':  { w:0.5,  n:'N2' },
   '(N3) $160,001 - $300,000 USD': { w:1.0,  n:'N3' },
