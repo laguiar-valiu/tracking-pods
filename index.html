@@ -186,7 +186,7 @@ input[type="month"]{border:1px solid #475569;background:#1E293B;color:white;padd
 <!-- Header -->
 <div class="header">
   <div class="header-logo">
-    <img src="https://valiu.com/image/logo_valiu.svg" style="height:20px;filter:brightness(0) invert(1);" alt="Valiu" onerror="this.style.display='none'">
+    <img src="https://valiu.com/image/logo_valiu.svg" style="height:20px;" alt="Valiu" onerror="this.style.display='none'">
     <div class="header-logo-divider"></div>
     <div>
       <div class="header-title">Tracking Incentivos Comerciales</div>
@@ -1185,7 +1185,28 @@ function renderAdminOverrides() {
     <td style="font-size:11px;color:var(--text-muted);">${o.resolvedAt?o.resolvedAt.slice(0,10):'—'}</td>
     <td><button class="btn btn-sm btn-ghost" onclick="removeOverride('${o.dealId}')">✕ Quitar</button></td>
   </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:#9CA3AF;padding:16px;">Sin overrides registrados</td></tr>';
-  document.getElementById('adminOverrides').innerHTML=`
+  // Build alerts section for "A resolver"
+  const overrAlerts=C.alerts||[];
+  const alertsHtml=overrAlerts.length?`
+    <div class="card" style="margin-bottom:16px;border-left:4px solid #F59E0B;">
+      <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:10px;">⚠️ A resolver (${overrAlerts.length}) — salieron de "Cuenta sin activación" sin fecha correcta</div>
+      <div style="overflow-x:auto;"><table class="override-table">
+        <thead><tr><th>Deal</th><th>KAM</th><th>Fecha salida etapa</th><th>Fecha activación</th><th>Acción</th></tr></thead>
+        <tbody>${overrAlerts.map(d=>{
+          const p=d.properties;
+          const kam=omap[p.hubspot_owner_id]||S.owners[String(p.hubspot_owner_id)]||`ID ${p.hubspot_owner_id}`;
+          const dt=p.hs_v2_date_exited_29556535?p.hs_v2_date_exited_29556535.slice(0,10):'—';
+          const fa=p.fecha_activacion||'—';
+          const esc2=(s)=>s.replace(/'/g,"\'").replace(/"/g,'&quot;');
+          return `<tr style="background:#FFFBEB;"><td>${dealLink(d.id,p.dealname,cfg)}</td>
+            <td><span class="badge badge-amber">${kam}</span></td>
+            <td style="font-size:11px;">${dt}</td><td style="font-size:11px;">${fa}</td>
+            <td><button class="btn btn-sm btn-primary" onclick="openOverrideModal('${d.id}','${esc2(p.dealname||'')}','${fa}')">Resolver →</button></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>`:'';
+  document.getElementById('adminOverrides').innerHTML=`${alertsHtml}`+`
     <div class="card" style="margin-bottom:16px;">
       <div style="font-size:13px;font-weight:700;margin-bottom:6px;">\u{1F3AF} Overrides de bonos por persona</div>
       <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Forzá bonos o el piso de pago de forma unilateral para casos excepcionales. Hover sobre cada checkbox para ver qué hace.</p>
@@ -1298,17 +1319,36 @@ function renderAdminPayment() {
 
   document.getElementById('adminPayment').innerHTML=`
 
+    <div class="card" style="margin-bottom:16px;">
+      <div class="param-group-title" style="margin-bottom:12px;">\u{1F4CA} % Cartera activa — input oficial (KAMs)</div>
+      <div style="font-size:11px;color:#9CA3AF;margin-bottom:8px;">Estos valores se usan para el cálculo de cierre. El HoS ingresa su % en "Mi desempeño".</div>
+      ${kamsOnly.length?kamsOnly.map(p=>`
+        <div class="param-row">
+          <span class="param-lbl">${p.name} (KAM)</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input class="ca-input" type="number" min="0" max="200" step="1" placeholder="%" value="${ca[p.key]||''}" oninput="saveCA('${p.key}',this.value)">
+            <span style="font-size:11px;color:var(--text-muted);">% cartera activa</span>
+          </div>
+        </div>`).join(''):'<p style="color:#9CA3AF;font-size:12px;">No hay KAMs activos.</p>'}
+    </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
         <span style="font-size:14px;font-weight:700;">\u{1F4B0} Cierre de mes — ${mesLabel}</span>
         <span style="font-size:13px;color:var(--text-muted);">Nómina variable total: <strong style="color:#059669;font-size:16px;">${money(totalNomina)}</strong></span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <span style="font-size:11px;color:var(--text-muted);">El % Cumpl. es individual × peso + pod × peso.</span>
+        <label style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;background:#F8FAFC;border:1px solid var(--border);border-radius:7px;padding:5px 10px;">
+          <input type="checkbox" id="bExtraToggle" onchange="toggleBExtraCol(this.checked)" style="cursor:pointer;">
+          Mostrar Bono Extra
+        </label>
       </div>
       <div style="overflow-x:auto;">
         <table class="payment-table">
           <thead><tr>
             <th>Nombre</th><th>Rol</th><th>Individual</th><th>Pod</th>
             <th>% Cumpl.</th><th>B. Equipo</th><th>B. Comp.</th><th>% Final</th>
-            ${showBExtra?'<th><label style="cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:600;"><input type="checkbox" checked onchange="toggleBExtraCol(this.checked)"> Bono extra</label></th>':'<th style="width:32px;padding:4px;text-align:center;" title="Activar bono extra"><label style="cursor:pointer;"><input type="checkbox" onchange="toggleBExtraCol(this.checked)"> B.Extra</label></th>'}
+            ${showBExtra?'<th>Bono extra</th>':''}
             <th>TOTAL</th>
           </tr></thead>
           <tbody>${rows.join('')}</tbody>
