@@ -314,6 +314,18 @@ const N_STRINGS = {
   // < $20k y sin datos → no califican (retornan null)
 };
 function nLevel(vol) { return N_STRINGS[vol] || null; }
+// Display labels for volume field (internal name → readable label)
+const VOL_LABELS = {
+  'Menor a $20,000 USD':           '< $20k (sin N)',
+  'No sabemos/no especifica':      'Sin dato',
+  'No opera divisas':              'No opera divisas',
+  'Menor a $25,000 USD':           'N1 · $20k-$50k',
+  'Entre $25,000 y $50,000 USD':   'N2 · $50k-$160k',
+  'Entre $50,000 y $100,000 USD':  'N3 · $160k-$300k',
+  'Entre $100,001 y $200,000 USD': 'N4 · $300k-$500k',
+  'Entre $200,001 y $500,000 USD': 'N5 · +$500k',
+};
+function volLabel(vol) { return VOL_LABELS[vol] || vol || 'sin dato'; }
 
 // ═══════════════════════════════════════════════
 // DEFAULT CONFIG
@@ -903,7 +915,7 @@ function renderSabana() {
       <td style="font-size:11px;color:var(--text-muted);">${sdrName}</td>
       <td style="font-size:11px;color:var(--text-muted);">${p.fuente_principal_de_lead||'—'}</td>
       <td style="font-size:11px;">${p.fecha_activacion||'—'}</td>
-      <td style="font-size:11px;">${nl?p.promedio___volumen_operado_al_mes__detallado_:'<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td style="font-size:11px;">${p.promedio___volumen_operado_al_mes__detallado_?volLabel(p.promedio___volumen_operado_al_mes__detallado_):'<span style="color:#9CA3AF;">sin dato</span>'}</td>
       <td>${nl?`<strong style="color:#059669;">${nl.n} · ${nl.w}pt</strong>`:'<span style="color:#9CA3AF;">—</span>'}</td>
       <td>${ctrl}</td></tr>`;
   }).join('')||'<tr><td colspan="8" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos para este mes</td></tr>';
@@ -920,7 +932,7 @@ function renderSabana() {
       <td>${sdrName?`<span class="badge badge-blue">${sdrName}</span>`:'<span class="no-sdr">Sin SDR</span>'}</td>
       <td style="font-size:11px;color:var(--text-muted);">${PIPELINE_NAMES[p.pipeline]||p.pipeline||'—'}</td>
       <td style="font-size:11px;">${dt}</td>
-      <td style="font-size:11px;">${nl?p.promedio___volumen_operado_al_mes__detallado_:'<span style="color:#9CA3AF;">sin dato</span>'}</td>
+      <td style="font-size:11px;">${p.promedio___volumen_operado_al_mes__detallado_?volLabel(p.promedio___volumen_operado_al_mes__detallado_):'<span style="color:#9CA3AF;">sin dato</span>'}</td>
       <td>${nl?`<strong style="color:#1D4ED8;">${nl.n} · ${nl.w}pt</strong>`:'<span style="color:#9CA3AF;">—</span>'}</td></tr>`;
   }).join('')||'<tr><td colspan="6" style="text-align:center;color:#9CA3AF;padding:16px;">Sin datos</td></tr>';
   document.getElementById('sabanaLeadsBody').innerHTML=leadsRows;
@@ -1159,6 +1171,7 @@ function toggleBonoExtra(idx, enabled) {
 }
 
 function renderAdminOverrides() {
+  const C=compute(), {cfg,omap}=C;
   const ovr=getOverrides(), bonoOvr=getBonoOvr();
   const allActive=getTeam().filter(p=>p.active);
   const teamNoHos=allActive.filter(p=>p.role!=='HOS');
