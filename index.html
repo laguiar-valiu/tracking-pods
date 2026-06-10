@@ -653,7 +653,8 @@ function compute() {
     } else if (p.role==='KAM') {
       const ncPct=(kamMap[p.oid]?.pts||0)/(p.target||cfg.KAM_NC_TARGET);
       const caVal=parseFloat(ca[p.key]||'')||0;
-      const caPct=caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN);
+      const _floor=cfg.FLOOR/100;
+      const caPct=caVal<cfg.KAM_CA_MIN?0:_floor+(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN)*(1-_floor);
       // Para KAM: cada métrica tiene su propio peso independiente
       indivPct=(cfg.KAM_NC_W/100)*ncPct+(cfg.KAM_CA_W/100)*caPct;
       const combined=(indivPct)+(cfg.POD_W/100)*podPct;
@@ -676,7 +677,8 @@ function compute() {
   function hosFinal() {
     if (!hos) return null;
     const caVal=parseFloat(ca['LAUTI']||'')||0;
-    const caPct=caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN);
+    const _floorH=cfg.FLOOR/100;
+    const caPct=caVal<cfg.KAM_CA_MIN?0:_floorH+(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN)*(1-_floorH);
     const src=cfg.HOS_KAMS_ONLY?S.activated:S.allActivated;
     let actPts=0,actCount=0;
     for (const d of src) {
@@ -755,11 +757,19 @@ function renderPodCards(C) {
     const d=kamMap[p.oid]||{n1:0,n2:0,n3:0,n4:0,n5:0,pts:0};
     const t=p.target||cfg.KAM_NC_TARGET, ncPct=d.pts/t;
     const caVal=parseFloat(ca[p.key]||'')||null;
-    const caPct=caVal!==null?(caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN)):null;
+    // CA normalización: piso (KAM_CA_MIN) → FLOOR%, target (KAM_CA_TARGET) → 100%
+    const floor=cfg.FLOOR/100;
+    const caPct=caVal!==null?(caVal<cfg.KAM_CA_MIN?0:floor+(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN)*(1-floor)):null;
     const col=ncPct>=1?'#10B981':ncPct>=0.5?'#F59E0B':'#EF4444';
     const w=Math.min(ncPct*100,100).toFixed(0);
     return `<div class="person-card">
       <div class="person-name">${p.name}</div><div class="person-role">KAM · Pod ${p.pod}</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="font-size:10px;background:#EFF6FF;color:#1D4ED8;padding:2px 7px;border-radius:4px;font-weight:600;">NC ${cfg.KAM_NC_W}%</span>
+        <span style="font-size:10px;background:#EFF6FF;color:#1D4ED8;padding:2px 7px;border-radius:4px;font-weight:600;">CA ${cfg.KAM_CA_W}%</span>
+        <span style="font-size:10px;background:#EFF6FF;color:#1D4ED8;padding:2px 7px;border-radius:4px;font-weight:600;">Pod ${cfg.POD_W}%</span>
+        <span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:2px 7px;border-radius:4px;font-weight:600;">Piso ${cfg.FLOOR}%</span>
+      </div>
       <div class="kpi-lbl"><span>Nuevos clientes</span><strong>${d.pts.toFixed(1)} / ${t} pts</strong></div>
       <div class="kpi-track"><div class="kpi-fill" style="width:${w}%;background:${col}"></div></div>
       <div class="sep"></div>
