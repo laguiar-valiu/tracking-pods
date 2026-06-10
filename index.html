@@ -1069,7 +1069,8 @@ function renderAdminParams() {
           <div class="param-group-title">Fórmula KAM — Pesos por métrica</div>
           ${nRow('Nuevos clientes activados','KAM_NC_W',1,'%')}
           ${nRow('Cartera activa','KAM_CA_W',1,'%')}
-          <div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Pod compartido con SDR (POD_W). NC + CA + Pod = 100%</div>
+          ${nRow('Pod (compartido con SDR)','POD_W',1,'%')}
+          <div style="font-size:10px;color:#9CA3AF;margin-top:4px;">NC + CA + Pod debe sumar 100%</div>
         </div>
       </div>
 
