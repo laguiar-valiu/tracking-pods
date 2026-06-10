@@ -336,6 +336,7 @@ const DEFAULT_CFG = {
   BONO_EQ_MIN:10, BONO_EQ_PP:10,
   COMP_MIN_CLI:3, COMP_MIN_DEMOS:4, BONO_COMP_PP:10,
   INDIV_W:70, POD_W:30, FLOOR:30,
+  KAM_NC_W:35, KAM_CA_W:35,
   HOS_ACT_PTS_W:50, HOS_ACT_COUNT_W:0, HOS_CA_W:25, HOS_LEADS_W:25,
   HOS_BONO_EQ_MIN:10, HOS_BONO_EQ_PP:20,
   HOS_KAMS_ONLY:true, HOS_ACT_COUNT_TARGET:8,
@@ -653,7 +654,15 @@ function compute() {
       const ncPct=(kamMap[p.oid]?.pts||0)/(p.target||cfg.KAM_NC_TARGET);
       const caVal=parseFloat(ca[p.key]||'')||0;
       const caPct=caVal<cfg.KAM_CA_MIN?0:(caVal-cfg.KAM_CA_MIN)/(cfg.KAM_CA_TARGET-cfg.KAM_CA_MIN);
-      indivPct=0.5*ncPct+0.5*caPct;
+      // Para KAM: cada métrica tiene su propio peso independiente
+      indivPct=(cfg.KAM_NC_W/100)*ncPct+(cfg.KAM_CA_W/100)*caPct;
+      const combined=(indivPct)+(cfg.POD_W/100)*podPct;
+      const ovr=bonoOvr[p.key]||{};
+      const bEq=(bonoEq||ovr.forceBonoEq)?cfg.BONO_EQ_PP/100:0;
+      const bComp=(winner===pod||ovr.forceBonoComp)?cfg.BONO_COMP_PP/100:0;
+      const finalPct=combined+bEq+bComp;
+      const meetsFloor=combined>=cfg.FLOOR/100||!!ovr.forceFloor;
+      return {indivPct,podPct,combined,bEq,bComp,finalPct,meetsFloor};
     }
     const combined=(cfg.INDIV_W/100)*indivPct+(cfg.POD_W/100)*podPct;
     const ovr=bonoOvr[p.key]||{};
@@ -1041,10 +1050,16 @@ function renderAdminParams() {
           ${nRow('Premio al pod ganador','BONO_COMP_PP',1,'pp')}
         </div>
         <div class="param-group">
-          <div class="param-group-title">Fórmula de compensación</div>
-          ${nRow('Peso componente individual','INDIV_W',1,'%')}
-          ${nRow('Peso componente pod','POD_W',1,'%')}
+          <div class="param-group-title">Fórmula SDR</div>
+          ${nRow('Peso individual (SDR)','INDIV_W',1,'%')}
+          ${nRow('Peso pod (SDR)','POD_W',1,'%')}
           ${nRow('Piso mínimo de pago','FLOOR',1,'%')}
+        </div>
+        <div class="param-group">
+          <div class="param-group-title">Fórmula KAM — Pesos por métrica</div>
+          ${nRow('Nuevos clientes activados','KAM_NC_W',1,'%')}
+          ${nRow('Cartera activa','KAM_CA_W',1,'%')}
+          <div style="font-size:10px;color:#9CA3AF;margin-top:4px;">Pod compartido con SDR (POD_W). NC + CA + Pod = 100%</div>
         </div>
       </div>
 
